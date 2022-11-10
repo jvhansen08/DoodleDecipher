@@ -7,15 +7,22 @@ This app will be useful in bringing people together and helping them create memo
 ### Must-have Features
 As a user, I should be able to:
 - Create an account and log in
-- Create a new game or join someone else's
-- Receive a text prompt from the previous player, draw it, and send it to the next player
-- Receive a drawing from the previous player, guess what it is, and send response to next player
+- Create a new game
+- Join an existing game lobby
+- Start a game (once players have joined the lobby, start a game between them)
+- Receive a text prompt from the previous player
+- Draw an image
+- Send an image to the next player
+- Receive a drawing from the previous player
+- Guess what the received drawing is
+- Send response (guess) to next player to draw
 - View the results at the end of the game
+- Enjoy this app from an intuitive & standardized UI
 
 ### Nice-to-have Features
 As a user, I would like to be able to:
-- Enjoy this app from an intuitive UI
-- Have a variatety of options in colors, sizes, background colors, etc. while drawing
+- Have a variety of options in colors, sizes, background colors, etc. while drawing
+- Have a bucket/fill tool in addition to the pencil/drawing tool
 - Store favorite drawings/sequences
 - Opt out of ads with a _small_ subscription fee
 
@@ -30,6 +37,7 @@ As a user, I would like to be able to:
 - How to utilize the Canvas and Painter classes in Android Studio in order to allow the user to draw on the screen
 - How to save user drawings and store them in Firebase
 - How to design a document/documents in Firebase in such a way that the correct prompts/images are sent to the proper players
+- How to manage game state, lobby creation, and joining a game
 
 
 # Requirements
