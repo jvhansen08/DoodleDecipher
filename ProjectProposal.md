@@ -6,30 +6,30 @@ This app will be useful in bringing people together and helping them create memo
 # Feature List
 ### Must-have Features
 As a user, I should be able to:
-    -Create an account and log in
-    -Create a new game or join someone else's
-    -Receive a text prompt from the previous player, draw it, and send it to the next player
-    -Receive a drawing from the previous player, guess what it is, and send response to next player
-    -View the results at the end of the game
+- Create an account and log in
+- Create a new game or join someone else's
+- Receive a text prompt from the previous player, draw it, and send it to the next player
+- Receive a drawing from the previous player, guess what it is, and send response to next player
+- View the results at the end of the game
 
 ### Nice-to-have Features
 As a user, I would like to be able to:
-    -Enjoy this app from an intuitive UI
-    -Have a variatety of options in colors, sizes, background colors, etc. while drawing
-    -Store favorite drawings/sequences
-    -Opt out of ads with a _small_ subscription fee
+- Enjoy this app from an intuitive UI
+- Have a variatety of options in colors, sizes, background colors, etc. while drawing
+- Store favorite drawings/sequences
+- Opt out of ads with a _small_ subscription fee
 
 # Technical Challenges
 
 ### Difficulties
-    -Implement a system of authentication to join a game
-    -Implement a system of communication to send images/text from one device to another
-    -To improve gameplay, we may need to set and enforce time limits on drawing and guessing
+- Implement a system of authentication to join a game
+- Implement a system of communication to send images/text from one device to another
+- To improve gameplay, we may need to set and enforce time limits on drawing and guessing
 
 ### Knowledge to Acquire
-    -How to utilize the Canvas and Painter classes in Android Studio in order to allow the user to draw on the screen
-    -How to save user drawings and store them in Firebase
-    -How to design a document/documents in Firebase in such a way that the correct prompts/images are sent to the proper players
+- How to utilize the Canvas and Painter classes in Android Studio in order to allow the user to draw on the screen
+- How to save user drawings and store them in Firebase
+- How to design a document/documents in Firebase in such a way that the correct prompts/images are sent to the proper players
 
 
 # Requirements
@@ -47,5 +47,5 @@ As a user, I would like to be able to:
 | Name | A-Number |
 |------|----------|
 | Jared Hansen | A02275891 |
-| NAME_HERE    | A_NUM_HERE |
+| Logan Ballard    | A02253793 |
 | NAME_HERE    | A_NUM_HERE |
