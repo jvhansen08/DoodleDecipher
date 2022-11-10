@@ -44,6 +44,7 @@ As a user, I would like to be able to:
 | Requirement | Resolution |
 |-------|------|
 | Use Firebase | Accounts and game info will be stored in Firebase |
+| Authentication | Require users be logged in to create/join games |
 | Have Monetization Strategy | Either banner ads or a pop-up ad after completion of every game |
 | Utilize Animation / Sensor | Intuitive animation when the user submits a drawing or text, leading to next screen |
 | Target 60 Hours of work | It will be a miracle if this only takes us 60 hours, between implementing navigations, animations, drawing, communication, etc. |
