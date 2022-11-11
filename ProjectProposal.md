@@ -57,4 +57,4 @@ As a user, I would like to be able to:
 |------|----------|
 | Jared Hansen | A02275891 |
 | Logan Ballard    | A02253793 |
-| NAME_HERE    | A_NUM_HERE |
+| Aaron Hanks    | A02275937 |
