@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "337318052414",
+    "project_id": "doodledecipher",
+    "storage_bucket": "doodledecipher.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337318052414:android:5099804127ad713f65076f",
+        "android_client_info": {
+          "package_name": "com.jaredaaronlogan.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337318052414-m7dk6a5g2ajppgpmfui22v9sbvaagn0v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNxGp-ykJyqWZtuAUQ-w1vzJWZlesPez8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337318052414-m7dk6a5g2ajppgpmfui22v9sbvaagn0v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
