@@ -15,7 +15,7 @@ import androidx.navigation.NavController
 fun HomeScreen(navController: NavController) {
     Column(
         modifier = Modifier
-            .background(Color.LightGray)
+            .background(color = Color(0xFFf8EDEB))
             .fillMaxSize()
     ) {
         Row(
