@@ -6,6 +6,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
 //    primary = Purple200,
@@ -35,6 +36,7 @@ fun DoodleDecipherTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    rememberSystemUiController().setSystemBarsColor(color = Color(0xFFFFB5A7))
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
