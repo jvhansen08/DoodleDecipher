@@ -116,11 +116,13 @@ fun StudioScreen(navController: NavController) {
         }
 
         //Below the top bar
-        Box(modifier = Modifier
-            .fillMaxHeight(.8f)
-            .fillMaxWidth(1f)
-            .background(Color.White),
+        Row(
+            modifier = Modifier
+                .fillMaxHeight(.8f)
+                .fillMaxWidth(1f),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
@@ -135,9 +137,12 @@ fun StudioScreen(navController: NavController) {
                             }
                             MotionEvent.ACTION_MOVE -> {
                                 action.value = it
-                                state.segment
-                                    .path
-                                    .lineTo(it.x, it.y)
+                                if (it.y >= 0) {
+                                    println(it.y)
+                                    state.segment
+                                        .path
+                                        .lineTo(it.x, it.y)
+                                }
                                 number++
                             }
                             MotionEvent.ACTION_UP -> {
@@ -165,17 +170,18 @@ fun StudioScreen(navController: NavController) {
                 }
                 number--
             }
+
         }
         Row(
             modifier = Modifier
                 .background(Color(0xFFfCD5CE))
                 .fillMaxSize(1f)
         ) {
-            Column() {
-                Row() {
-                    AnimatedVisibility(
-                        visible = !choosingColor && !choosingWidth,
-                    ) {
+            AnimatedVisibility(
+                visible = !choosingColor && !choosingWidth,
+            ) {
+                Column() {
+                    Row() {
                         Button(
                             onClick = {
                                 choosingColor = !choosingColor
@@ -184,33 +190,7 @@ fun StudioScreen(navController: NavController) {
                             Text(text = "Change color")
                         }
                     }
-                    AnimatedVisibility(
-                        visible = choosingColor,
-                    ) {
-                        Row() {
-                            Column() {
-                                ColorOptionRow(viewModel, state.topRowColors)
-                                ColorOptionRow(viewModel, state.secondRowColors)
-                                ColorOptionRow(viewModel, state.thirdRowColors)
-                            }
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize(1f)
-                                    .padding(15.dp),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.End
-                            ) {
-                                Button(onClick = { choosingColor = !choosingColor }) {
-                                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Collapse colors",)
-                                }
-                            }
-                        }
-                    }
-                }
-                Row {
-                    AnimatedVisibility(
-                        visible = !choosingWidth && !choosingColor,
-                    ) {
+                    Row() {
                         Button(
                             onClick = {
                                 choosingWidth = !choosingWidth
@@ -219,50 +199,74 @@ fun StudioScreen(navController: NavController) {
                             Text(text = "Change Width")
                         }
                     }
-                    AnimatedVisibility(
-                        visible = choosingWidth,
+                }
+            }
+            AnimatedVisibility(
+                visible = choosingColor,
+            ) {
+                Row() {
+                    Column() {
+                        ColorOptionRow(viewModel, state.topRowColors)
+                        ColorOptionRow(viewModel, state.secondRowColors)
+                        ColorOptionRow(viewModel, state.thirdRowColors)
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(1f)
+                            .padding(15.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.End
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
+                        Button(onClick = { choosingColor = !choosingColor }) {
+                            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Collapse colors",)
+                        }
+                    }
+                }
+            }
+            Row {
+                AnimatedVisibility(
+                    visible = choosingWidth,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(1f)
+                                .fillMaxWidth(.8f),
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            Column(
+                            Row(
                                 modifier = Modifier
-                                    .fillMaxHeight(1f)
-                                    .fillMaxWidth(.8f),
-                                horizontalAlignment = Alignment.CenterHorizontally,
+                                    .fillMaxSize(),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxSize(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    WidthOption(color = state.penColor, size = 20f) {
-                                        viewModel.changeWidth(15f)
-                                    }
-                                    WidthOption(color = state.penColor, size = 25f) {
-                                        viewModel.changeWidth(25f)
-                                    }
-                                    WidthOption(color = state.penColor, size = 30f) {
-                                        viewModel.changeWidth(40f)
-                                    }
-                                    WidthOption(color = state.penColor, size = 35f) {
-                                        viewModel.changeWidth(65f)
-                                    }
-                                    WidthOption(color = state.penColor, size = 45f) {
-                                        viewModel.changeWidth(100f)
-                                    }
+                                WidthOption(color = state.penColor, size = 20f) {
+                                    viewModel.changeWidth(15f)
+                                }
+                                WidthOption(color = state.penColor, size = 25f) {
+                                    viewModel.changeWidth(25f)
+                                }
+                                WidthOption(color = state.penColor, size = 30f) {
+                                    viewModel.changeWidth(40f)
+                                }
+                                WidthOption(color = state.penColor, size = 35f) {
+                                    viewModel.changeWidth(65f)
+                                }
+                                WidthOption(color = state.penColor, size = 45f) {
+                                    viewModel.changeWidth(100f)
                                 }
                             }
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize(1f)
-                                    .padding(15.dp),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.End
-                            ) {
-                                Button(onClick = { choosingWidth = !choosingWidth }) {
-                                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Collapse widths",)
-                                }
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(1f)
+                                .padding(15.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Button(onClick = { choosingWidth = !choosingWidth }) {
+                                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Collapse widths",)
                             }
                         }
                     }
