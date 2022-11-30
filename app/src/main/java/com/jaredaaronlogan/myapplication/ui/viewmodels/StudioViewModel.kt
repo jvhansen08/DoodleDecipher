@@ -1,6 +1,7 @@
 package com.jaredaaronlogan.myapplication.ui.viewmodels
 
 import android.app.Application
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -20,7 +21,7 @@ class StudioScreenState {
         Color(0xFFA87AF7),
         Color(0xFF9FFCFD),
         Color(0xFFA1FB8E),
-        Color.White,
+        Color(0xFFEAEAEA),
     )
     val secondRowColors = listOf(
         Color(0xFF8E403A),

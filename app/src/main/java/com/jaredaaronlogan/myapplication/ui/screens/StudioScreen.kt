@@ -119,7 +119,8 @@ fun StudioScreen(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxHeight(.8f)
-                .fillMaxWidth(1f),
+                .fillMaxWidth(1f)
+                .background(Color(0xFFEAEAEA)),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
