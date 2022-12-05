@@ -16,14 +16,15 @@ import androidx.compose.ui.unit.dp
 fun WidthOption(
     color: Color,
     size: Float,
+    screenWidth: Float,
     onClick: () -> Unit
 ) {
-    Spacer(modifier = Modifier.width(15.dp))
+    Spacer(modifier = Modifier.width((screenWidth / 15).dp))
     Button(
         modifier = Modifier
             .width(size.dp)
             .height(size.dp)
-            .padding(5.dp),
+            .padding(horizontal = 5.dp, vertical = 5.dp),
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(color),
         onClick = onClick
