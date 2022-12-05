@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.jaredaaronlogan.myapplication.ui.navigation.Routes
+import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -51,6 +53,20 @@ fun HomeScreen(navController: NavController) {
                 onClick = { navController.navigate("gallery") },
             ) {
                 Text(text = "Gallery")
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    UserRepository.signOutUser()
+                    navController.navigate(Routes.Launch.route) },
+            ) {
+                Text(text = "Log out")
             }
         }
     }
