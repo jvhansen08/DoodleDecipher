@@ -1,6 +1,7 @@
 package com.jaredaaronlogan.myapplication.ui.viewmodels
 
 import android.app.Application
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -8,9 +9,14 @@ import androidx.lifecycle.AndroidViewModel
 import com.jaredaaronlogan.myapplication.ui.components.Drawing
 import com.jaredaaronlogan.myapplication.ui.components.Segment
 import com.jaredaaronlogan.myapplication.ui.repositories.TempRepo
+import java.util.*
+import kotlin.collections.ArrayList
 
 class StudioScreenState {
-    val segments = mutableStateListOf<Segment>()
+    val segments = ArrayList<Segment>()
+    val backupSegments = ArrayList<Segment>()
+    val history = LinkedList<Segment>()
+    var cleared = false
     var penColor = Color.Black
     var width = 10f
     var segment = Segment(Path(), penColor, width,)
@@ -20,7 +26,7 @@ class StudioScreenState {
         Color(0xFFA87AF7),
         Color(0xFF9FFCFD),
         Color(0xFFA1FB8E),
-        Color.White,
+        Color(0xFFFAFAFA),
     )
     val secondRowColors = listOf(
         Color(0xFF8E403A),
@@ -44,8 +50,15 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
     val uiState = StudioScreenState()
     val repo = TempRepo
     fun saveSegment() {
+        uiState.history.clear()
         uiState.segments.add(uiState.segment)
         uiState.segment = Segment(Path(), uiState.penColor, uiState.width)
+    }
+
+    fun clear() {
+        uiState.cleared = true
+        for (segment in uiState.segments) uiState.backupSegments.add(segment)
+        uiState.segments.clear()
     }
 
     fun saveImage() {
@@ -62,6 +75,22 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
     fun changeWidth(newWidth: Float){
         uiState.width = newWidth
         uiState.segment = Segment(Path(), uiState.penColor, newWidth)
+    }
+
+    fun undo() {
+        if (uiState.segments.size > 0) {
+            val lastSegment = uiState.segments.removeLast()
+            uiState.history.push(lastSegment)
+        } else if (uiState.cleared) {
+            uiState.cleared = false
+            for (segment in uiState.backupSegments) uiState.segments.add(segment)
+        }
+    }
+
+    fun redo() {
+        if (uiState.history.size > 0) {
+            uiState.segments.add(uiState.history.pollFirst())
+        }
     }
 
 }

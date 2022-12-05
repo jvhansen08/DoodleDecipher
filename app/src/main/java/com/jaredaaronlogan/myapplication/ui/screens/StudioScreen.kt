@@ -19,12 +19,14 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.jaredaaronlogan.myapplication.ui.components.ColorOption
 import com.jaredaaronlogan.myapplication.ui.components.WidthOption
 import com.jaredaaronlogan.myapplication.ui.viewmodels.StudioViewModel
+import org.intellij.lang.annotations.JdkConstants
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -71,11 +73,10 @@ fun StudioScreen(navController: NavController) {
                             .fillMaxWidth(1f)
                             .padding(3.dp),
                         onClick = {
-                            viewModel.saveImage()
-                            navController.popBackStack()
+                            viewModel.redo()
                         },
                     ) {
-                        Text(text = "Save")
+                        Text(text = "Redo")
                     }
                 }
             }
@@ -94,7 +95,7 @@ fun StudioScreen(navController: NavController) {
                             .fillMaxWidth(.5f)
                             .padding(3.dp),
                         onClick = {
-                            state.segments.removeAt(state.segments.size - 1)
+                            viewModel.undo()
                             number--
                         }
                     ) {
@@ -106,7 +107,7 @@ fun StudioScreen(navController: NavController) {
                             .fillMaxWidth(1f)
                             .padding(3.dp),
                         onClick = {
-                            state.segments.clear()
+                            viewModel.clear()
                         }
                     ) {
                         Text(text = "Clear")
@@ -119,7 +120,8 @@ fun StudioScreen(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxHeight(.8f)
-                .fillMaxWidth(1f),
+                .fillMaxWidth(1f)
+                .background(Color(0xFFFAFAFA)),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
@@ -133,6 +135,7 @@ fun StudioScreen(navController: NavController) {
                                 state.segment
                                     .path
                                     .moveTo(it.x, it.y)
+                                state.segment.path.lineTo(it.x, it.y)
                                 number++
                             }
                             MotionEvent.ACTION_MOVE -> {
@@ -181,8 +184,14 @@ fun StudioScreen(navController: NavController) {
                 visible = !choosingColor && !choosingWidth,
             ) {
                 Column() {
-                    Row() {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight(.5f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Button(
+                            modifier = Modifier
+                                .fillMaxHeight(.5f),
                             onClick = {
                                 choosingColor = !choosingColor
                             }
@@ -190,13 +199,34 @@ fun StudioScreen(navController: NavController) {
                             Text(text = "Change color")
                         }
                     }
-                    Row() {
-                        Button(
-                            onClick = {
-                                choosingWidth = !choosingWidth
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight(1f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.fillMaxWidth(.5f)) {
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxHeight(.5f),
+                                onClick = {
+                                    choosingWidth = !choosingWidth
+                                }
+                            ) {
+                                Text(text = "Change Width")
                             }
-                        ) {
-                            Text(text = "Change Width")
+                        }
+                        Column(modifier = Modifier.fillMaxWidth(1f)) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(1f),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                Button(
+                                    onClick = { viewModel.saveImage() }
+                                ) {
+                                    Text("Send")
+                                }
+                            }
                         }
                     }
                 }
@@ -205,10 +235,13 @@ fun StudioScreen(navController: NavController) {
                 visible = choosingColor,
             ) {
                 Row() {
-                    Column() {
-                        ColorOptionRow(viewModel, state.topRowColors)
-                        ColorOptionRow(viewModel, state.secondRowColors)
-                        ColorOptionRow(viewModel, state.thirdRowColors)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(.8f)
+                    ) {
+                        ColorOptionRow(viewModel, state.topRowColors, .333333f)
+                        ColorOptionRow(viewModel, state.secondRowColors, .5f)
+                        ColorOptionRow(viewModel, state.thirdRowColors, 1f)
                     }
                     Column(
                         modifier = Modifier
@@ -241,19 +274,22 @@ fun StudioScreen(navController: NavController) {
                                     .fillMaxSize(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                WidthOption(color = state.penColor, size = 20f) {
+                                val configuration = LocalConfiguration.current
+                                val screenWidth = configuration.screenWidthDp
+                                Spacer(modifier = Modifier.width(5.dp))
+                                WidthOption(color = state.penColor, size = 20f, screenWidth.toFloat()) {
                                     viewModel.changeWidth(15f)
                                 }
-                                WidthOption(color = state.penColor, size = 25f) {
+                                WidthOption(color = state.penColor, size = 25f, screenWidth.toFloat()) {
                                     viewModel.changeWidth(25f)
                                 }
-                                WidthOption(color = state.penColor, size = 30f) {
+                                WidthOption(color = state.penColor, size = 30f, screenWidth.toFloat()) {
                                     viewModel.changeWidth(40f)
                                 }
-                                WidthOption(color = state.penColor, size = 35f) {
+                                WidthOption(color = state.penColor, size = 37f, screenWidth.toFloat()) {
                                     viewModel.changeWidth(65f)
                                 }
-                                WidthOption(color = state.penColor, size = 45f) {
+                                WidthOption(color = state.penColor, size = 45f, screenWidth.toFloat()) {
                                     viewModel.changeWidth(100f)
                                 }
                             }
@@ -277,12 +313,20 @@ fun StudioScreen(navController: NavController) {
 }
 
 @Composable
-fun ColorOptionRow(viewModel: StudioViewModel, colors: List<Color>) {
-    Row {
+fun ColorOptionRow(viewModel: StudioViewModel, colors: List<Color>, heightRatio: Float) {
+    Row(
+        modifier = Modifier
+            .fillMaxHeight(heightRatio)
+            .fillMaxWidth(1f)
+    ) {
+        var counter = 7f
+        var widthRatio = 1f/counter
         for (color in colors) {
-            ColorOption(color = color) {
+            ColorOption(color = color, width = widthRatio) {
                 viewModel.changeColor(color)
             }
+            counter--
+            widthRatio = 1f / counter
         }
     }
 }
