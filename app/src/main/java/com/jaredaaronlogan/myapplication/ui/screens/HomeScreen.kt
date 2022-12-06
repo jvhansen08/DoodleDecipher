@@ -63,6 +63,20 @@ fun HomeScreen(navController: NavController) {
         ) {
             Button(
                 onClick = {
+                    navController.navigate("lobby")
+                },
+            ) {
+                Text(text = "Create a Lobby")
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
                     UserRepository.signOutUser()
                     navController.navigate(Routes.Launch.route) },
             ) {
