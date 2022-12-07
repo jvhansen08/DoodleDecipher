@@ -25,7 +25,7 @@ fun LobbyScreen(navController: NavController) {
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(true) {
+    LaunchedEffect(state.players.isEmpty()) {
         viewModel.setupInitialState()
     }
 

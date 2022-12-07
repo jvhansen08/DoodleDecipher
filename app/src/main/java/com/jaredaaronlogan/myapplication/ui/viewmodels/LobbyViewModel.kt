@@ -21,8 +21,18 @@ class LobbyScreenState {
 class LobbyViewModel(application: Application): AndroidViewModel(application) {
     val uiState = LobbyScreenState()
 
-    suspend fun setupInitialState() {
+    fun setupInitialState() {
         uiState.lobby = LobbyRepo.createLobby()
+    }
+
+    fun joinLobby(joinCode: String) {
+        uiState.errorMessage = ""
+        val lobby = LobbyRepo.getLobby(joinCode)
+        if (lobby == null) {
+            uiState.errorMessage = "Lobby not found."
+        } else {
+            uiState.lobby = lobby
+        }
     }
 
     fun startGame() {

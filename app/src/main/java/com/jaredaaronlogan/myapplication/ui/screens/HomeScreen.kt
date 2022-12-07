@@ -17,6 +17,7 @@ import com.jaredaaronlogan.myapplication.ui.viewmodels.LobbyViewModel
 
 @Composable
 fun HomeScreen(navController: NavController) {
+    val viewModel: LobbyViewModel = viewModel()
     Column(
         modifier = Modifier
             .background(color = Color(0xFFf8EDEB))
@@ -67,6 +68,21 @@ fun HomeScreen(navController: NavController) {
                 onClick = { navController.navigate("lobby") },
             ) {
                 Text(text = "Create New Lobby")
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    viewModel.joinLobby("3A8D")
+                    navController.navigate("lobby")
+                },
+            ) {
+                Text(text = "Join Lobby")
             }
         }
         Row(
