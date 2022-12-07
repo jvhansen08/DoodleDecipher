@@ -8,7 +8,6 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.jaredaaronlogan.myapplication.ui.models.Lobby
 import com.jaredaaronlogan.myapplication.ui.models.Player
-import kotlinx.coroutines.tasks.await
 
 object LobbyRepo {
     fun createLobby(): Lobby {

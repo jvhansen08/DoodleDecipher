@@ -31,7 +31,7 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         if (lobby == null) {
             uiState.errorMessage = "Lobby not found."
         } else {
-            uiState.lobby = lobby
+            uiState.lobby = LobbyRepo.joinLobby(lobby.joinCode!!)
         }
     }
 
