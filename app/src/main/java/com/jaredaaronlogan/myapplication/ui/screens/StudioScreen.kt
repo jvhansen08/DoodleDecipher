@@ -21,8 +21,12 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.jaredaaronlogan.myapplication.ui.components.ColorOption
 import com.jaredaaronlogan.myapplication.ui.components.WidthOption
 import com.jaredaaronlogan.myapplication.ui.viewmodels.StudioViewModel
@@ -52,7 +56,7 @@ fun StudioScreen(navController: NavController) {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(.5f)
+                    .fillMaxWidth(.25f)
             ) {
                 Row(
                     modifier = Modifier
@@ -61,22 +65,11 @@ fun StudioScreen(navController: NavController) {
                     Button(
                         modifier = Modifier
                             .fillMaxHeight(.75f)
-                            .fillMaxWidth(.5f)
+                            .fillMaxWidth(1f)
                             .padding(3.dp),
                         onClick = { navController.popBackStack() }
                     ) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Go Back",)
-                    }
-                    Button(
-                        modifier = Modifier
-                            .fillMaxHeight(.75f)
-                            .fillMaxWidth(1f)
-                            .padding(3.dp),
-                        onClick = {
-                            viewModel.redo()
-                        },
-                    ) {
-                        Text(text = "Redo")
                     }
                 }
             }
@@ -89,6 +82,17 @@ fun StudioScreen(navController: NavController) {
                     modifier = Modifier
                         .padding(5.dp)
                 ) {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxHeight(.75f)
+                            .fillMaxWidth(.33f)
+                            .padding(3.dp),
+                        onClick = {
+                            viewModel.redo()
+                        },
+                    ) {
+                        Text(text = "Redo")
+                    }
                     Button(
                         modifier = Modifier
                             .fillMaxHeight(.75f)
@@ -186,12 +190,10 @@ fun StudioScreen(navController: NavController) {
                 Column() {
                     Row(
                         modifier = Modifier
-                            .fillMaxHeight(.5f),
+                            .fillMaxHeight(.33333f),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(
-                            modifier = Modifier
-                                .fillMaxHeight(.5f),
                             onClick = {
                                 choosingColor = !choosingColor
                             }
@@ -201,13 +203,11 @@ fun StudioScreen(navController: NavController) {
                     }
                     Row(
                         modifier = Modifier
-                            .fillMaxHeight(1f),
+                            .fillMaxHeight(.5f),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.fillMaxWidth(.5f)) {
                             Button(
-                                modifier = Modifier
-                                    .fillMaxHeight(.5f),
                                 onClick = {
                                     choosingWidth = !choosingWidth
                                 }
@@ -222,12 +222,29 @@ fun StudioScreen(navController: NavController) {
                                 horizontalArrangement = Arrangement.End
                             ) {
                                 Button(
-                                    onClick = { viewModel.saveImage() }
+                                    onClick = {
+                                        viewModel.saveImage()
+                                        navController.popBackStack()
+                                    }
                                 ) {
                                     Text("Send")
                                 }
                             }
                         }
+                    }
+                    Row() {
+                        AndroidView(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.White),
+                            factory = { context ->
+                                AdView(context).apply {
+                                    setAdSize(AdSize.BANNER)
+                                    adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                                    loadAd(AdRequest.Builder().build())
+                                }
+                            },
+                        )
                     }
                 }
             }
