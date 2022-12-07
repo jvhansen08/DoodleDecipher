@@ -128,25 +128,4 @@ object LobbyRepo {
         )
         return screenNames.random()
     }
-
-    fun getLobby(joinCode: String): Lobby? {
-        val db = Firebase.database
-        val lobbyRef = db.getReference("lobbies").orderByChild("joinCode").equalTo(joinCode).limitToFirst(1)
-
-        var lobby: Lobby? = null
-
-        lobbyRef.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (child in snapshot.children) {
-                    lobby = child.getValue<Lobby>()
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                println("Failed to read value: ${error.toException()}")
-            }
-        })
-
-        return lobby
-    }
 }

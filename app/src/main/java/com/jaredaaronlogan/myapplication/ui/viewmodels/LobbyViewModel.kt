@@ -26,13 +26,7 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun joinLobby(joinCode: String) {
-        uiState.errorMessage = ""
-        val lobby = LobbyRepo.getLobby(joinCode)
-        if (lobby == null) {
-            uiState.errorMessage = "Lobby not found."
-        } else {
-            uiState.lobby = LobbyRepo.joinLobby(lobby.joinCode!!)
-        }
+        uiState.lobby = LobbyRepo.joinLobby(joinCode)
     }
 
     fun startGame() {
