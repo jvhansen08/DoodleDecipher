@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoodleDecipher"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9994203855393174~2845348749"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

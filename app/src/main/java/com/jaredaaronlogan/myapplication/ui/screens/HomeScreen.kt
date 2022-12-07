@@ -5,11 +5,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 
@@ -18,7 +23,8 @@ fun HomeScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .background(color = Color(0xFFf8EDEB))
-            .fillMaxSize()
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -68,6 +74,24 @@ fun HomeScreen(navController: NavController) {
             ) {
                 Text(text = "Log out")
             }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            AndroidView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White),
+                factory = { context ->
+                    AdView(context).apply {
+                        setAdSize(AdSize.BANNER)
+                        adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                        loadAd(AdRequest.Builder().build())
+                    }
+                },
+            )
         }
     }
 }
