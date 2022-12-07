@@ -23,6 +23,7 @@ fun RootNavigation() {
             composable(Routes.Home.route) { HomeScreen(navController = navController) }
             composable(Routes.Gallery.route) { GalleryScreen(navController = navController)}
             composable(Routes.Studio.route) { StudioScreen(navController = navController) }
+            composable(Routes.Lobby.route) { LobbyScreen(navController = navController) }
         }
         composable(route = Routes.Splash.route) { SplashScreen(navController) }
     }
