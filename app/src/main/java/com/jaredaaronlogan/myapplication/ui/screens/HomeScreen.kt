@@ -11,12 +11,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
+import com.jaredaaronlogan.myapplication.ui.viewmodels.LobbyViewModel
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -59,6 +61,18 @@ fun HomeScreen(navController: NavController) {
                 onClick = { navController.navigate("gallery") },
             ) {
                 Text(text = "Gallery")
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = { navController.navigate("lobby") },
+            ) {
+                Text(text = "Create New Lobby")
             }
         }
         Row(
