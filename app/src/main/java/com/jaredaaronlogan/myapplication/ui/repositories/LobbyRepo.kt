@@ -62,8 +62,10 @@ object LobbyRepo {
         val lobbyRef = db.getReference("lobbies").child(joinCode)
         lobbyRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val lobby = snapshot.getValue<Lobby>()
-                println(lobby)
+                val test = snapshot.child("players").getValue<Map<String, Player>>()
+                for (player in test?.values ?: emptyList()) {
+                    println(player.screenName)
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
