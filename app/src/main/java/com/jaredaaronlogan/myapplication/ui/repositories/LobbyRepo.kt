@@ -34,6 +34,8 @@ object LobbyRepo {
 
         lobbyRef.child(joinCode).child("players").child(host.id ?: "").setValue(host)
 
+        readData(joinCode)
+
         return joinCode
     }
 
