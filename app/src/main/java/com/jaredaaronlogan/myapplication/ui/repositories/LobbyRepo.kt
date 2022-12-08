@@ -8,11 +8,10 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.jaredaaronlogan.myapplication.ui.models.Lobby
 import com.jaredaaronlogan.myapplication.ui.models.Player
-import kotlinx.coroutines.tasks.await
 import kotlin.random.Random
 
 object LobbyRepo {
-    val db = Firebase.database
+    private val db = Firebase.database
     fun createLobby(): String {
 
         val lobbyRef = db.getReference("lobbies")
@@ -39,30 +38,30 @@ object LobbyRepo {
     }
 
     fun joinLobby(joinCode: String) {
-        println(joinCode)
-
         val player = Player(
             id = UserRepository.getCurrentUserId(),
             screenName = generateRandomScreenName(),
-            score = 100,
+            score = 0,
             host = false,
             ready = false,
         )
 
         db.getReference("lobbies").child(joinCode).child("players").child(player.id ?: "").setValue(player)
+        readData(joinCode)
     }
 
-    private fun updateLobby(lobby: Lobby) {
-        val db = Firebase.database
-        val lobbyRef = db.getReference("lobbies").child(lobby.id!!)
-
-        lobbyRef.setValue(lobby).addOnCompleteListener {
-            if (it.isSuccessful) {
-                println("Lobby updated successfully") // TODO: Change to toast
-            } else {
-                println("Lobby update failed") // TODO: Change to toast and send back to home screen
+    private fun readData(joinCode: String) {
+        val lobbyRef = db.getReference("lobbies").child(joinCode)
+        lobbyRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val lobby = snapshot.getValue<Lobby>()
+                println(lobby)
             }
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Failed to read value.")
+            }
+        })
     }
 
     private fun generateJoinCode(): String {

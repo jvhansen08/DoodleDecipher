@@ -37,7 +37,15 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
                 .padding(15.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text ="Lobby Screen $joinCode", style = MaterialTheme.typography.h2)
+            Text(text ="Lobby Screen", style = MaterialTheme.typography.h2)
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(text = joinCode, style = MaterialTheme.typography.h3)
         }
         LazyColumn(modifier = Modifier
             .fillMaxHeight()
