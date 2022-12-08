@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.lifecycle.AndroidViewModel
 import com.jaredaaronlogan.myapplication.ui.components.Drawing
 import com.jaredaaronlogan.myapplication.ui.components.Segment
+import com.jaredaaronlogan.myapplication.ui.repositories.LobbyRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.TempRepo
 import java.util.*
 import kotlin.collections.ArrayList
@@ -49,6 +50,7 @@ class StudioScreenState {
 class StudioViewModel(application: Application): AndroidViewModel(application) {
     val uiState = StudioScreenState()
     val repo = TempRepo
+    val realRepo = LobbyRepo
     fun saveSegment() {
         uiState.history.clear()
         uiState.segments.add(uiState.segment)
@@ -65,6 +67,7 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
         val drawing = Drawing(uiState.segments)
         repo.segments = uiState.segments
         repo.drawings.add(drawing)
+        realRepo.saveImage(drawing)
     }
 
     fun changeColor(newColor: Color) {

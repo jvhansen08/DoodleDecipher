@@ -100,6 +100,19 @@ fun HomeScreen(navController: NavController) {
         }
         Row(
             modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    navController.navigate(Routes.Studio.route) },
+            ) {
+                Text(text = "Draw")
+            }
+        }
+        Row(
+            modifier = Modifier
                 .fillMaxSize(),
             verticalAlignment = Alignment.Bottom
         ) {

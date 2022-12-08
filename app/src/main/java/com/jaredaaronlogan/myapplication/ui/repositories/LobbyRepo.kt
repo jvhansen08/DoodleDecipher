@@ -6,6 +6,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.jaredaaronlogan.myapplication.ui.components.Drawing
 import com.jaredaaronlogan.myapplication.ui.models.Lobby
 import com.jaredaaronlogan.myapplication.ui.models.Player
 import kotlin.random.Random
@@ -50,6 +51,11 @@ object LobbyRepo {
 
         db.getReference("lobbies").child(joinCode).child("players").child(player.id ?: "").setValue(player)
         readData(joinCode)
+    }
+
+    fun saveImage(drawing: Drawing) {
+        val drawingRef = db.getReference("drawings")
+        drawingRef.child("drawing1").setValue(drawing)
     }
 
     private fun readData(joinCode: String) {
