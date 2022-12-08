@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,11 +21,14 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
+import com.jaredaaronlogan.myapplication.ui.viewmodels.HomeScreenViewModel
 import com.jaredaaronlogan.myapplication.ui.viewmodels.LobbyViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    val viewModel: LobbyViewModel = viewModel()
+    val viewModel: HomeScreenViewModel = viewModel()
+    val state = viewModel.uiState
     Column(
         modifier = Modifier
             .background(color = Color(0xFFf8EDEB))
@@ -47,31 +53,10 @@ fun HomeScreen(navController: NavController) {
             horizontalArrangement = Arrangement.Center
         ) {
             Button(
-                onClick = { navController.navigate("studio") },
-            ) {
-                Text(text = "Draw")
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = { navController.navigate("gallery") },
-            ) {
-                Text(text = "Gallery")
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = { navController.navigate("lobby") },
+                onClick = {
+                    val joinCode = viewModel.createLobby()
+                    navController.navigate("lobby?joinCode=${joinCode}")
+                },
             ) {
                 Text(text = "Create New Lobby")
             }
@@ -82,10 +67,18 @@ fun HomeScreen(navController: NavController) {
                 .padding(15.dp),
             horizontalArrangement = Arrangement.Center
         ) {
+            TextField(value = state.joinCode, onValueChange = { state.joinCode = it })
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
             Button(
                 onClick = {
-                    viewModel.joinLobby("3A8D")
-                    navController.navigate("lobby")
+                    viewModel.joinLobby(state.joinCode)
+                    navController.navigate("lobby?joinCode=${state.joinCode}",)
                 },
             ) {
                 Text(text = "Join Lobby")

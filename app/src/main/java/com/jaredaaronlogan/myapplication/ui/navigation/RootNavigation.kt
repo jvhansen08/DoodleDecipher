@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.jaredaaronlogan.myapplication.ui.screens.*
 
 @Composable
@@ -23,7 +24,12 @@ fun RootNavigation() {
             composable(Routes.Home.route) { HomeScreen(navController = navController) }
             composable(Routes.Gallery.route) { GalleryScreen(navController = navController)}
             composable(Routes.Studio.route) { StudioScreen(navController = navController) }
-            composable(Routes.Lobby.route) { LobbyScreen(navController = navController) }
+            composable(
+                route = "lobby?joinCode={joinCode}",
+                arguments = listOf(navArgument("joinCode") { defaultValue = "001000" })
+            ) { navBackStackEntry ->
+                LobbyScreen(navController = navController, navBackStackEntry.arguments?.getString("joinCode") ?: "")
+            }
         }
         composable(route = Routes.Splash.route) { SplashScreen(navController) }
     }

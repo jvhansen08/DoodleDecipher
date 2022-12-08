@@ -20,14 +20,11 @@ import com.jaredaaronlogan.myapplication.ui.viewmodels.LobbyViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun LobbyScreen(navController: NavController) {
+fun LobbyScreen(navController: NavController, joinCode: String) {
     val viewModel: LobbyViewModel = viewModel()
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(state.players.isEmpty()) {
-        viewModel.setupInitialState()
-    }
 
     Column(
         modifier = Modifier
@@ -40,7 +37,7 @@ fun LobbyScreen(navController: NavController) {
                 .padding(15.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text ="Lobby Screen", style = MaterialTheme.typography.h2)
+            Text(text ="Lobby Screen $joinCode", style = MaterialTheme.typography.h2)
         }
         LazyColumn(modifier = Modifier
             .fillMaxHeight()

@@ -6,7 +6,6 @@ plugins {
 
 android {
     compileSdk 33
-
     defaultConfig {
         applicationId "com.jaredaaronlogan.myapplication"
         minSdk 29
