@@ -13,18 +13,10 @@ import kotlin.random.Random
 
 object LobbyRepo {
     val db = Firebase.database
-    suspend fun createLobby(): Lobby {
+    fun createLobby(): String {
 
         val lobbyRef = db.getReference("lobbies")
         val joinCode = generateJoinCode()
-
-//        val currentLobbies = lobbyRef.get().await()
-//        var joinCodeInUse = currentLobbies.hasChild(joinCode)
-//
-//        while(joinCodeInUse) {
-//            joinCode = generateJoinCode()
-//            joinCodeInUse = currentLobbies.hasChild(joinCode)
-//        }
 
         val host = Player(
             id = UserRepository.getCurrentUserId(),
@@ -43,7 +35,7 @@ object LobbyRepo {
 
         lobbyRef.child(joinCode).child("players").child(host.id ?: "").setValue(host)
 
-        return lobby
+        return joinCode
     }
 
     fun joinLobby(joinCode: String) {

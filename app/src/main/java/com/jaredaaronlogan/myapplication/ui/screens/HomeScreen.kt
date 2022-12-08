@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,13 +21,14 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
+import com.jaredaaronlogan.myapplication.ui.viewmodels.HomeScreenViewModel
 import com.jaredaaronlogan.myapplication.ui.viewmodels.LobbyViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    val coroutineScope = rememberCoroutineScope()
-    val viewModel: LobbyViewModel = viewModel()
+    val viewModel: HomeScreenViewModel = viewModel()
+    val state = viewModel.uiState
     Column(
         modifier = Modifier
             .background(color = Color(0xFFf8EDEB))
@@ -52,10 +54,8 @@ fun HomeScreen(navController: NavController) {
         ) {
             Button(
                 onClick = {
-                    coroutineScope.launch {
-                        viewModel.createLobby()
-                    }
-                    navController.navigate("lobby")
+                    val joinCode = viewModel.createLobby()
+                    navController.navigate("lobby?joinCode=${joinCode}")
                 },
             ) {
                 Text(text = "Create New Lobby")
@@ -67,10 +67,18 @@ fun HomeScreen(navController: NavController) {
                 .padding(15.dp),
             horizontalArrangement = Arrangement.Center
         ) {
+            TextField(value = state.joinCode, onValueChange = { state.joinCode = it })
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
             Button(
                 onClick = {
-                    viewModel.joinLobby("AU0CFX")
-                    navController.navigate("lobby")
+                    viewModel.joinLobby(state.joinCode)
+                    navController.navigate("lobby?joinCode=${state.joinCode}",)
                 },
             ) {
                 Text(text = "Join Lobby")
