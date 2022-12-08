@@ -21,8 +21,12 @@ class LobbyScreenState {
 class LobbyViewModel(application: Application): AndroidViewModel(application) {
     val uiState = LobbyScreenState()
 
-    suspend fun setupInitialState() {
+    fun setupInitialState() {
         uiState.lobby = LobbyRepo.createLobby()
+    }
+
+    fun joinLobby(joinCode: String) {
+        uiState.lobby = LobbyRepo.joinLobby(joinCode)
     }
 
     fun startGame() {
