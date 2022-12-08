@@ -13,9 +13,10 @@ class HomeScreenState {
 
 class HomeScreenViewModel(application: Application): AndroidViewModel(application) {
     val uiState = HomeScreenState()
-    fun createLobby() {
+    fun createLobby(): String {
         val joinCode = LobbyRepo.createLobby()
         uiState.joinCode = joinCode
+        return joinCode
     }
 
     fun joinLobby(joinCode: String) {
