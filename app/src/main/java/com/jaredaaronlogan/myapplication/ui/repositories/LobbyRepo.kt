@@ -12,18 +12,19 @@ import kotlinx.coroutines.tasks.await
 import kotlin.random.Random
 
 object LobbyRepo {
+    val db = Firebase.database
     suspend fun createLobby(): Lobby {
-        val db = Firebase.database
+
         val lobbyRef = db.getReference("lobbies")
-        var joinCode = generateJoinCode()
+        val joinCode = generateJoinCode()
 
-        val currentLobbies = lobbyRef.get().await()
-        var joinCodeInUse = currentLobbies.hasChild(joinCode)
-
-        while(joinCodeInUse) {
-            joinCode = generateJoinCode()
-            joinCodeInUse = currentLobbies.hasChild(joinCode)
-        }
+//        val currentLobbies = lobbyRef.get().await()
+//        var joinCodeInUse = currentLobbies.hasChild(joinCode)
+//
+//        while(joinCodeInUse) {
+//            joinCode = generateJoinCode()
+//            joinCodeInUse = currentLobbies.hasChild(joinCode)
+//        }
 
         val host = Player(
             id = UserRepository.getCurrentUserId(),
@@ -36,65 +37,27 @@ object LobbyRepo {
         val lobby = Lobby(
             hostId = UserRepository.getCurrentUserId(),
             joinCode = joinCode,
-            players = listOf(host),
         )
 
-        lobbyRef.child(lobby.joinCode ?: "").setValue(lobby).addOnCompleteListener {
-            if (it.isSuccessful) {
-                println("Lobby created successfully") // TODO: Change to toast
-            } else {
-                println("Lobby creation failed") // TODO: Change to toast and send back to home screen
-            }
-        }
+        lobbyRef.child(lobby.joinCode ?: "").setValue(lobby)
 
-        lobbyRef.addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val newLobby = snapshot.getValue<Lobby>()
-                println("New Lobby: $newLobby")
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                println("Failed to read value: ${error.toException()}")
-            }
-        })
+        lobbyRef.child(joinCode).child("players").child(host.id ?: "").setValue(host)
 
         return lobby
     }
 
-    fun joinLobby(joinCode: String): Lobby {
-        val db = Firebase.database
-        val lobbyRef = db.getReference("lobbies").orderByChild("joinCode").equalTo(joinCode).limitToFirst(1)
+    fun joinLobby(joinCode: String) {
+        println(joinCode)
 
-        var lobby: Lobby? = null
+        val player = Player(
+            id = UserRepository.getCurrentUserId(),
+            screenName = generateRandomScreenName(),
+            score = 100,
+            host = false,
+            ready = false,
+        )
 
-        lobbyRef.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (child in snapshot.children) {
-                    lobby = child.getValue<Lobby>()
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                println("Failed to read value: ${error.toException()}")
-            }
-        })
-
-        if (lobby == null) {
-            println("Lobby not found") // TODO: Change to toast
-        } else {
-            val player = Player(
-                id = UserRepository.getCurrentUserId(),
-                screenName = generateRandomScreenName(),
-                score = 0,
-                host = false,
-                ready = false,
-            )
-
-            lobby!!.players = lobby!!.players?.plus(player)
-            updateLobby(lobby!!)
-        }
-
-        return lobby!!
+        db.getReference("lobbies").child(joinCode).child("players").child(player.id ?: "").setValue(player)
     }
 
     private fun updateLobby(lobby: Lobby) {

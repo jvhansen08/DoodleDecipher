@@ -25,9 +25,6 @@ fun LobbyScreen(navController: NavController) {
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(state.players.isEmpty()) {
-        viewModel.setupInitialState()
-    }
 
     Column(
         modifier = Modifier

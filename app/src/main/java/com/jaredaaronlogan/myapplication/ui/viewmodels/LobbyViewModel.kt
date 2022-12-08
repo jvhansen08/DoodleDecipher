@@ -21,12 +21,12 @@ class LobbyScreenState {
 class LobbyViewModel(application: Application): AndroidViewModel(application) {
     val uiState = LobbyScreenState()
 
-    suspend fun setupInitialState() {
+    suspend fun createLobby() {
         uiState.lobby = LobbyRepo.createLobby()
     }
 
     fun joinLobby(joinCode: String) {
-        uiState.lobby = LobbyRepo.joinLobby(joinCode)
+        LobbyRepo.joinLobby(joinCode)
     }
 
     fun startGame() {
@@ -34,6 +34,5 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         uiState.startGameSuccess = true
         print("Starting game...")
         // print list of current players in lobby when game is starting
-        print(uiState.lobby?.players)
     }
 }
