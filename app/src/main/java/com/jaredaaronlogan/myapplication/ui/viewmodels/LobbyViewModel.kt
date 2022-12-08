@@ -25,6 +25,10 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         uiState.lobby = LobbyRepo.createLobby()
     }
 
+    fun joinLobby(joinCode: String) {
+        uiState.lobby = LobbyRepo.joinLobby(joinCode)
+    }
+
     fun startGame() {
         uiState.errorMessage = ""
         uiState.startGameSuccess = true
