@@ -31,6 +31,8 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
                 var hostExists = false
+                uiState.startGameSuccess = snapshot.child("gameStarted").getValue<Boolean>() ?: false
+                println(uiState.startGameSuccess)
                 for (player in playersValues?.values ?: emptyList()) {
                     if (player.host) hostExists = true
                     if (player !in uiState._players) {
@@ -46,9 +48,10 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         })
     }
 
-    fun startGame() {
+    fun startGame(joinCode: String) {
+        LobbyRepo.db.getReference("lobbies").child(joinCode).child("gameStarted").setValue(true)
         uiState.errorMessage = ""
-        uiState.startGameSuccess = true
+//        uiState.startGameSuccess = true
         print("Starting game...")
     }
 
