@@ -6,6 +6,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import com.jaredaaronlogan.myapplication.ui.models.Lobby
 import com.jaredaaronlogan.myapplication.ui.models.Player
 import com.jaredaaronlogan.myapplication.ui.repositories.LobbyRepo
@@ -21,10 +25,28 @@ class LobbyScreenState {
 class LobbyViewModel(application: Application): AndroidViewModel(application) {
     val uiState = LobbyScreenState()
 
+    fun getPlayers(joinCode: String) {
+        val lobbyRef = LobbyRepo.db.getReference("lobbies").child(joinCode)
+        val playerList = ArrayList<Player>()
+        lobbyRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
+                for (player in playersValues?.values ?: emptyList()) {
+                    println(player.screenName)
+                    uiState._players.add(player)
+                    playerList.add(player)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Failed to read value.")
+            }
+        })
+    }
+
     fun startGame() {
         uiState.errorMessage = ""
         uiState.startGameSuccess = true
         print("Starting game...")
-        // print list of current players in lobby when game is starting
     }
 }
