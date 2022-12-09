@@ -58,7 +58,7 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
                 PlayerListItem(player = player)
             }
         }
-        if (viewModel.isHost()) {
+        if (state.isHost) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
