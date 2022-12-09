@@ -13,6 +13,7 @@ import com.google.firebase.database.ktx.getValue
 import com.jaredaaronlogan.myapplication.ui.models.Lobby
 import com.jaredaaronlogan.myapplication.ui.models.Player
 import com.jaredaaronlogan.myapplication.ui.repositories.LobbyRepo
+import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 
 class LobbyScreenState {
     val _players = mutableStateListOf<Player>()
@@ -27,14 +28,16 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
 
     fun getPlayers(joinCode: String) {
         val lobbyRef = LobbyRepo.db.getReference("lobbies").child(joinCode)
-        val playerList = ArrayList<Player>()
         lobbyRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
                 for (player in playersValues?.values ?: emptyList()) {
                     println(player.screenName)
-                    uiState._players.add(player)
-                    playerList.add(player)
+                    if (!(player in uiState._players)) {
+                        uiState._players.add(player)
+                        println(player.id)
+                        println(UserRepository.getCurrentUserId())
+                    }
                 }
             }
 
@@ -48,5 +51,15 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         uiState.errorMessage = ""
         uiState.startGameSuccess = true
         print("Starting game...")
+    }
+
+    fun isHost(): Boolean {
+        val uId = UserRepository.getCurrentUserId()
+        for(player in uiState._players) {
+            if (player.id == uId) {
+                return player.host
+            }
+        }
+        return false
     }
 }

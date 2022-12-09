@@ -57,19 +57,21 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
                 PlayerListItem(player = player)
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(onClick = {
-                scope.launch {
-                    viewModel.startGame()
-                    viewModel.getPlayers(joinCode)
+        if (viewModel.isHost()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(onClick = {
+                    scope.launch {
+                        viewModel.startGame()
+                        viewModel.getPlayers(joinCode)
+                    }
+                }) {
+                    Text(text = "Start Game")
                 }
-            }) {
-                Text(text = "Start Game")
             }
         }
     }
