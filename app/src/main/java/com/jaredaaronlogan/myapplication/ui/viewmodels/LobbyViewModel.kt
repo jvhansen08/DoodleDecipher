@@ -20,6 +20,7 @@ class LobbyScreenState {
     var isHost by mutableStateOf(false)
     var errorMessage by mutableStateOf("")
     var startGameSuccess by mutableStateOf(false)
+    var gameOpen by mutableStateOf(true)
 }
 
 class LobbyViewModel(application: Application): AndroidViewModel(application) {
@@ -31,13 +32,12 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
                 var hostExists = false
+                uiState.startGameSuccess = snapshot.child("gameStarted").getValue<Boolean>() ?: false
+                println(uiState.startGameSuccess)
                 for (player in playersValues?.values ?: emptyList()) {
                     if (player.host) hostExists = true
-                    println(player.screenName)
-                    if (!(player in uiState._players)) {
+                    if (player !in uiState._players) {
                         uiState._players.add(player)
-                        println(player.id)
-                        println(UserRepository.getCurrentUserId())
                     }
                     if (!hostExists) uiState._players[0].host = true
                 }
@@ -49,9 +49,11 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         })
     }
 
-    fun startGame() {
+    fun startGame(joinCode: String) {
+        LobbyRepo.db.getReference("lobbies").child(joinCode).child("gameStarted").setValue(true)
         uiState.errorMessage = ""
-        uiState.startGameSuccess = true
+//        uiState.gameOpen = false
+//        uiState.startGameSuccess = true
         print("Starting game...")
     }
 

@@ -14,5 +14,6 @@ object Routes {
     val SignIn = Screen("signin")
     val SignUp = Screen("signup")
     val Splash = Screen("splash")
+    val Prompt = Screen("prompt")
     val Lobby = Screen("lobby")
 }

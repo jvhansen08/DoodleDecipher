@@ -33,6 +33,7 @@ object LobbyRepo {
         val lobby = Lobby(
             hostId = UserRepository.getCurrentUserId(),
             joinCode = joinCode,
+            gameStarted = false,
         )
 
         lobbyRef.child(lobby.joinCode ?: "").setValue(lobby)
@@ -108,7 +109,8 @@ object LobbyRepo {
             "Jolly Jaguar",
             "Kooky Koala",
         )
-        return screenNames.random()
+        val random = Random(System.currentTimeMillis())
+        return screenNames[random.nextInt(screenNames.size)]
     }
 }
 //val drawing: Drawing
