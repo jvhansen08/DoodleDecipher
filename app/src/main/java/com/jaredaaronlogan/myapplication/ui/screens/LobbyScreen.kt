@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.jaredaaronlogan.myapplication.ui.components.PlayerListItem
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.viewmodels.LobbyViewModel
@@ -25,7 +26,8 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
     val viewModel: LobbyViewModel = viewModel()
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()
-    if (state.startGameSuccess) {
+    if (state.startGameSuccess && state.gameOpen) {
+        state.gameOpen = false
         navController.navigate(Routes.Prompt.route)
     }
 
