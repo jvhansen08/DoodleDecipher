@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun WidthOption(
-    color: Color,
+    color: Int,
     size: Float,
     screenWidth: Float,
     onClick: () -> Unit
@@ -26,7 +26,7 @@ fun WidthOption(
             .height(size.dp)
             .padding(horizontal = 5.dp, vertical = 5.dp),
         shape = CircleShape,
-        colors = ButtonDefaults.buttonColors(color),
+        colors = ButtonDefaults.buttonColors(Color(color)),
         onClick = onClick
     ) {
     }

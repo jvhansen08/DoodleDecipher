@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ColorOption(
-    color: Color,
+    color: Int,
     width: Float,
     onClick:() -> Unit,
 ) {
@@ -21,7 +21,7 @@ fun ColorOption(
             .fillMaxWidth(width)
             .padding(5.dp),
         shape = CircleShape,
-        colors = ButtonDefaults.buttonColors(color),
+        colors = ButtonDefaults.buttonColors(Color(color)),
         onClick = onClick,
     ) {
     }

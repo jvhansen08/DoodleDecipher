@@ -58,10 +58,10 @@ object LobbyRepo {
         readData(joinCode)
     }
 
-    fun saveImage(drawing: Drawing) {
-        val drawingRef = db.getReference("drawings")
-        drawingRef.child("drawing1").setValue(drawing)
-    }
+//    fun saveImage(drawing: Drawing) {
+//        val drawingRef = db.getReference("drawings")
+//        drawingRef.child("drawing1").setValue(drawing)
+//    }
 
     private fun readData(joinCode: String) {
         val lobbyRef = db.getReference("lobbies").child(joinCode)
