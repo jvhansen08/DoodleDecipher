@@ -20,6 +20,7 @@ class LobbyScreenState {
     var isHost by mutableStateOf(false)
     var errorMessage by mutableStateOf("")
     var startGameSuccess by mutableStateOf(false)
+    var gameOpen by mutableStateOf(true)
 }
 
 class LobbyViewModel(application: Application): AndroidViewModel(application) {
@@ -51,6 +52,7 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
     fun startGame(joinCode: String) {
         LobbyRepo.db.getReference("lobbies").child(joinCode).child("gameStarted").setValue(true)
         uiState.errorMessage = ""
+//        uiState.gameOpen = false
 //        uiState.startGameSuccess = true
         print("Starting game...")
     }
