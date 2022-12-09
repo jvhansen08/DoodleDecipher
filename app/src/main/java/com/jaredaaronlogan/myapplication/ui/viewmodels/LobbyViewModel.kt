@@ -10,7 +10,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.jaredaaronlogan.myapplication.ui.models.Lobby
 import com.jaredaaronlogan.myapplication.ui.models.Player
 import com.jaredaaronlogan.myapplication.ui.repositories.LobbyRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
@@ -19,7 +18,6 @@ class LobbyScreenState {
     val _players = mutableStateListOf<Player>()
     val players: List<Player> get() = _players
     var isHost by mutableStateOf(false)
-    var lobby by mutableStateOf<Lobby?>(null)
     var errorMessage by mutableStateOf("")
     var startGameSuccess by mutableStateOf(false)
 }

@@ -145,7 +145,6 @@ fun StudioScreen(navController: NavController) {
                             MotionEvent.ACTION_MOVE -> {
                                 action.value = it
                                 if (it.y >= 0) {
-                                    println(it.y)
                                     state.segment
                                         .path
                                         .lineTo(it.x, it.y)

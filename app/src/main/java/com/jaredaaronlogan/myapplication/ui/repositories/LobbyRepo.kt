@@ -52,22 +52,8 @@ object LobbyRepo {
             host = false,
             ready = false,
         )
-        var playerAlreadyExists = false
-        val playersInLobby = db.getReference("lobbies").child(joinCode)
-        playersInLobby.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
-                for (currPlayer in playersValues?.values ?: emptyList()) {
-                    if (player.id == currPlayer.id) playerAlreadyExists = false
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
-
-        if (!playerAlreadyExists) db.getReference("lobbies").child(joinCode).child("players").child(player.id ?: "").setValue(player)
+        db.getReference("lobbies").child(joinCode).child("players").child(player.id ?: "").setValue(player)
 
         readData(joinCode)
     }
