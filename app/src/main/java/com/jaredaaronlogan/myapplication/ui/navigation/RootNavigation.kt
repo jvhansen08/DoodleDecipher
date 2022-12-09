@@ -24,6 +24,7 @@ fun RootNavigation() {
             composable(Routes.Home.route) { HomeScreen(navController = navController) }
             composable(Routes.Gallery.route) { GalleryScreen(navController = navController)}
             composable(Routes.Studio.route) { StudioScreen(navController = navController) }
+            composable(Routes.Prompt.route) { PromptScreen(navController = navController) }
             composable(
                 route = "lobby?joinCode={joinCode}",
                 arguments = listOf(navArgument("joinCode") { defaultValue = "001000" })

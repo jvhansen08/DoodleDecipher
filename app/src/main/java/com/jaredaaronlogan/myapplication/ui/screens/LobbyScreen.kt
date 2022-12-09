@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.jaredaaronlogan.myapplication.ui.components.PlayerListItem
+import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.viewmodels.LobbyViewModel
 import kotlinx.coroutines.launch
 
@@ -24,6 +25,9 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
     val viewModel: LobbyViewModel = viewModel()
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()
+    if (state.startGameSuccess) {
+        navController.navigate(Routes.Prompt.route)
+    }
 
     LaunchedEffect(true) {
         viewModel.getPlayers(joinCode)
@@ -66,8 +70,8 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
             ) {
                 Button(onClick = {
                     scope.launch {
-                        viewModel.startGame()
-                        viewModel.getPlayers(joinCode)
+                        viewModel.startGame(joinCode)
+//                        viewModel.getPlayers(joinCode)
                     }
                 }) {
                     Text(text = "Start Game")

@@ -29,17 +29,21 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         val lobbyRef = LobbyRepo.db.getReference("lobbies").child(joinCode)
         lobbyRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
-                var hostExists = false
-                for (player in playersValues?.values ?: emptyList()) {
-                    if (player.host) hostExists = true
-                    println(player.screenName)
-                    if (!(player in uiState._players)) {
-                        uiState._players.add(player)
-                        println(player.id)
-                        println(UserRepository.getCurrentUserId())
+                if (snapshot.child("gameStarted").value.toString() != "true"){
+                    val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
+                    var hostExists = false
+                    for (player in playersValues?.values ?: emptyList()) {
+                        if (player.host) hostExists = true
+                        println(player.screenName)
+                        if (!(player in uiState._players)) {
+                            uiState._players.add(player)
+                            println(player.id)
+                            println(UserRepository.getCurrentUserId())
+                        }
+                        if (!hostExists) uiState._players[0].host = true
                     }
-                    if (!hostExists) uiState._players[0].host = true
+                } else {
+                    uiState.startGameSuccess = true
                 }
             }
 
@@ -49,7 +53,8 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         })
     }
 
-    fun startGame() {
+    fun startGame(joinCode: String) {
+        LobbyRepo.db.getReference("lobbies").child(joinCode).child("gameStarted").setValue(true)
         uiState.errorMessage = ""
         uiState.startGameSuccess = true
         print("Starting game...")
