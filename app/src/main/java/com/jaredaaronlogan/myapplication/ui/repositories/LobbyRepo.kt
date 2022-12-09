@@ -12,7 +12,7 @@ import com.jaredaaronlogan.myapplication.ui.models.Player
 import kotlin.random.Random
 
 object LobbyRepo {
-    private val db = Firebase.database
+    val db = Firebase.database
     fun createLobby(): String {
 
         val lobbyRef = db.getReference("lobbies")
@@ -50,6 +50,7 @@ object LobbyRepo {
         )
 
         db.getReference("lobbies").child(joinCode).child("players").child(player.id ?: "").setValue(player)
+
         readData(joinCode)
     }
 
@@ -62,8 +63,8 @@ object LobbyRepo {
         val lobbyRef = db.getReference("lobbies").child(joinCode)
         lobbyRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val test = snapshot.child("players").getValue<Map<String, Player>>()
-                for (player in test?.values ?: emptyList()) {
+                val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
+                for (player in playersValues?.values ?: emptyList()) {
                     println(player.screenName)
                 }
             }
