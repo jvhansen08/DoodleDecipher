@@ -25,6 +25,9 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()
 
+    LaunchedEffect(true) {
+        viewModel.getPlayers(joinCode)
+    }
 
     Column(
         modifier = Modifier
@@ -48,24 +51,27 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
             Text(text = joinCode, style = MaterialTheme.typography.h3)
         }
         LazyColumn(modifier = Modifier
-            .fillMaxHeight()
+            .fillMaxHeight(.8f)
             .padding(16.dp)) {
             items(state.players, key = {it.id!!}) { player ->
                 PlayerListItem(player = player)
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(onClick = {
-                scope.launch {
-                    viewModel.startGame()
+        if (viewModel.isHost()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(onClick = {
+                    scope.launch {
+                        viewModel.startGame()
+                        viewModel.getPlayers(joinCode)
+                    }
+                }) {
+                    Text(text = "Start Game")
                 }
-            }) {
-                Text(text = "Start Game")
             }
         }
     }

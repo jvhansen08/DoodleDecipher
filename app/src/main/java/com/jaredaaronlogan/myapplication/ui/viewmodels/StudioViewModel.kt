@@ -1,99 +1,127 @@
 package com.jaredaaronlogan.myapplication.ui.viewmodels
 
 import android.app.Application
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.lifecycle.AndroidViewModel
 import com.jaredaaronlogan.myapplication.ui.components.Drawing
 import com.jaredaaronlogan.myapplication.ui.components.Segment
-import com.jaredaaronlogan.myapplication.ui.repositories.LobbyRepo
+import com.jaredaaronlogan.myapplication.ui.repositories.DrawingRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.TempRepo
+import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
+import com.jaredaaronlogan.myapplication.ui.theme.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class StudioScreenState {
-    val segments = ArrayList<Segment>()
-    val backupSegments = ArrayList<Segment>()
-    val history = LinkedList<Segment>()
+    val history = LinkedList<Set<ArrayList<Float>>>()
+
+    var yValuesPath = ArrayList<Float>()
+    var xValuesPath = ArrayList<Float>()
+    val yCollection = HashMap<String, ArrayList<Float>>()
+    val xCollection = HashMap<String, ArrayList<Float>>()
+    val colorCollection = HashMap<String, Int>()
+    val widthCollection = HashMap<String, Float>()
+    var indexCounter = 0
+    var drawingCount = 0
+
+
     var cleared = false
-    var penColor = Color.Black
+    var penColor = black1.toInt()
     var width = 10f
-    var segment = Segment(Path(), penColor, width,)
+    var segment = Segment(Path(), Color(penColor), width,)
     val topRowColors = listOf(
-        Color.Black,
-        Color(0xFFEF88BE),
-        Color(0xFFA87AF7),
-        Color(0xFF9FFCFD),
-        Color(0xFFA1FB8E),
-        Color(0xFFFAFAFA),
+        black1.toInt(),
+        pink1.toInt(),
+        purple1.toInt(),
+        blue1.toInt(),
+        green1.toInt(),
+        white.toInt(),
     )
     val secondRowColors = listOf(
-        Color(0xFF8E403A),
-        Color(0xFFEA3680),
-        Color(0xFF732BF5),
-        Color(0xFF37B0B0),
-        Color(0xFF6EEB49),
-        Color(0xFFF8FF2F),
+        red2.toInt(),
+        pink2.toInt(),
+        purple2.toInt(),
+        blue2.toInt(),
+        green2.toInt(),
+        yellow2.toInt(),
     )
     val thirdRowColors = listOf(
-        Color(0xFFF07D28),
-        Color(0xFFEB1006),
-        Color(0xFF75197D),
-        Color(0xFF0020E3),
-        Color(0xFF419428),
-        Color(0xFFF0D22E),
+        orange3.toInt(),
+        red3.toInt(),
+        purple3.toInt(),
+        blue3.toInt(),
+        green3.toInt(),
+        yellow3.toInt(),
     )
 }
 
 class StudioViewModel(application: Application): AndroidViewModel(application) {
     val uiState = StudioScreenState()
     val repo = TempRepo
-    val realRepo = LobbyRepo
+    val realRepo = DrawingRepo
     fun saveSegment() {
         uiState.history.clear()
-        uiState.segments.add(uiState.segment)
-        uiState.segment = Segment(Path(), uiState.penColor, uiState.width)
+        uiState.xCollection[uiState.indexCounter.toString()] = uiState.xValuesPath
+        uiState.yCollection[uiState.indexCounter.toString()] = uiState.yValuesPath
+        uiState.colorCollection[uiState.indexCounter.toString()] = uiState.penColor
+        uiState.widthCollection[uiState.indexCounter.toString()] = uiState.width
+        uiState.indexCounter++
     }
 
     fun clear() {
-        uiState.cleared = true
-        for (segment in uiState.segments) uiState.backupSegments.add(segment)
-        uiState.segments.clear()
+        uiState.indexCounter = 0
+        uiState.xValuesPath.clear()
+        uiState.yValuesPath.clear()
+        uiState.yCollection.clear()
+        uiState.xCollection.clear()
     }
 
     fun saveImage() {
-        val drawing = Drawing(uiState.segments)
-        repo.segments = uiState.segments
-        repo.drawings.add(drawing)
+        repo.indexCounter = uiState.indexCounter
+        repo.colorCollection = uiState.colorCollection
+        repo.widthCollection = uiState.widthCollection
+        repo.xCollection = uiState.xCollection
+        repo.yCollection = uiState.yCollection
+        val drawing = Drawing(
+            xCollection = uiState.xCollection,
+            yCollection = uiState.yCollection,
+            colorCollection = uiState.colorCollection,
+            widthCollection = uiState.widthCollection,
+            indexCounter = uiState.indexCounter,
+            id = UserRepository.getCurrentUserId() + uiState.drawingCount
+        )
         realRepo.saveImage(drawing)
     }
 
-    fun changeColor(newColor: Color) {
+    fun changeColor(newColor: Int) {
         uiState.penColor = newColor
-        uiState.segment = Segment(Path(), newColor, uiState.width)
+        println(uiState.penColor.toString())
     }
 
     fun changeWidth(newWidth: Float){
         uiState.width = newWidth
-        uiState.segment = Segment(Path(), uiState.penColor, newWidth)
     }
 
     fun undo() {
-        if (uiState.segments.size > 0) {
-            val lastSegment = uiState.segments.removeLast()
-            uiState.history.push(lastSegment)
-        } else if (uiState.cleared) {
-            uiState.cleared = false
-            for (segment in uiState.backupSegments) uiState.segments.add(segment)
+        if (uiState.indexCounter > 0) {
+            val lastX = uiState.xCollection[(uiState.indexCounter - 1).toString()]
+            val lastY = uiState.yCollection[(uiState.indexCounter - 1).toString()]
+            uiState.xCollection[(uiState.indexCounter - 1).toString()]!!.clear()
+            uiState.yCollection[(uiState.indexCounter - 1).toString()]!!.clear()
+            uiState.indexCounter--
+            uiState.history.push(setOf(lastX!!, lastY!!))
         }
     }
 
-    fun redo() {
-        if (uiState.history.size > 0) {
-            uiState.segments.add(uiState.history.pollFirst())
-        }
-    }
+//    fun redo() {
+//        if (uiState.history.size > 0) {
+//            val mostRecent = uiState.history.pollFirst()
+//            uiState.xCollection[uiState.indexCounter] = mostRecent.first()
+//            uiState.yCollection[uiState.indexCounter] = mostRecent.first()
+//            uiState.indexCounter++
+//        }
+//    }
 
 }

@@ -18,6 +18,9 @@ fun PlayerListItem(
     Surface(
         elevation = 2.dp,
         shape = RoundedCornerShape(4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
         Column {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp, 0.dp)) {

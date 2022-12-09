@@ -113,6 +113,19 @@ fun HomeScreen(navController: NavController) {
         }
         Row(
             modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    navController.navigate(Routes.Gallery.route) },
+            ) {
+                Text(text = "Gallery")
+            }
+        }
+        Row(
+            modifier = Modifier
                 .fillMaxSize(),
             verticalAlignment = Alignment.Bottom
         ) {

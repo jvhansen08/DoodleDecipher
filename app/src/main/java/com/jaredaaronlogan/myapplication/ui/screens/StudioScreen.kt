@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -29,6 +30,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.jaredaaronlogan.myapplication.ui.components.ColorOption
 import com.jaredaaronlogan.myapplication.ui.components.WidthOption
+import com.jaredaaronlogan.myapplication.ui.theme.black1
 import com.jaredaaronlogan.myapplication.ui.viewmodels.StudioViewModel
 import org.intellij.lang.annotations.JdkConstants
 
@@ -82,17 +84,17 @@ fun StudioScreen(navController: NavController) {
                     modifier = Modifier
                         .padding(5.dp)
                 ) {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxHeight(.75f)
-                            .fillMaxWidth(.33f)
-                            .padding(3.dp),
-                        onClick = {
-                            viewModel.redo()
-                        },
-                    ) {
-                        Text(text = "Redo")
-                    }
+//                    Button(
+//                        modifier = Modifier
+//                            .fillMaxHeight(.75f)
+//                            .fillMaxWidth(.33f)
+//                            .padding(3.dp),
+//                        onClick = {
+//                            viewModel.redo()
+//                        },
+//                    ) {
+//                        Text(text = "Redo")
+//                    }
                     Button(
                         modifier = Modifier
                             .fillMaxHeight(.75f)
@@ -136,6 +138,12 @@ fun StudioScreen(navController: NavController) {
                         when (it.action) {
                             MotionEvent.ACTION_DOWN -> {
                                 action.value = it
+                                state.yValuesPath = ArrayList()
+                                state.yValuesPath.add(it.y)
+                                state.xValuesPath = ArrayList()
+                                state.xValuesPath.add(it.x)
+                                state.widthCollection[state.indexCounter.toString()] = state.width
+                                state.colorCollection[state.indexCounter.toString()] = state.penColor
                                 state.segment
                                     .path
                                     .moveTo(it.x, it.y)
@@ -145,7 +153,8 @@ fun StudioScreen(navController: NavController) {
                             MotionEvent.ACTION_MOVE -> {
                                 action.value = it
                                 if (it.y >= 0) {
-                                    println(it.y)
+                                    state.xValuesPath.add(it.x)
+                                    state.yValuesPath.add(it.y)
                                     state.segment
                                         .path
                                         .lineTo(it.x, it.y)
@@ -159,21 +168,38 @@ fun StudioScreen(navController: NavController) {
                         true
                     }
             ) {
-                state.segments.forEach() {
+                for (i in 0 until state.indexCounter) {
+                    val path = Path()
+                    val xVals = state.xCollection[i.toString()]
+                    val yVals = state.yCollection[i.toString()]
+                    path.moveTo(xVals?.get(0) ?: 0f , yVals?.get(0) ?: 0f)
+                    for (j in 1 until xVals!!.size) {
+                        path.lineTo(xVals[j], yVals!![j])
+                    }
                     drawPath(
-                        path = it.path,
-                        color = it.color,
+                        path = path,
+                        color = Color(state.colorCollection[i.toString()]!!),
                         alpha = 1f,
-                        style = Stroke(width = it.width, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                        style = Stroke(width = state.widthCollection[i.toString()]!!, cap = StrokeCap.Round, join = StrokeJoin.Round)
                     )
                 }
                 action.value?.let {
-                    drawPath(
-                        path = state.segment.path,
-                        color = state.segment.color,
-                        alpha = 1f,
-                        style = Stroke(width = state.segment.width, cap = StrokeCap.Round, join = StrokeJoin.Round)
-                    )
+                    if (state.xValuesPath.size > 0) {
+                        val currPath = Path()
+                        currPath.moveTo(state.xValuesPath[0], state.yValuesPath[0])
+                        val size = state.xValuesPath.size
+                        for (i in 1 until size) {
+                            currPath.lineTo(state.xValuesPath[i], state.yValuesPath[i])
+                        }
+                        var colorNum = state.colorCollection[state.indexCounter.toString()]
+                        if (colorNum == null) colorNum = state.colorCollection[(state.indexCounter - 1).toString()]
+                        drawPath(
+                            path = currPath,
+                            color = Color(colorNum!!),
+                            alpha = 1f,
+                            style = Stroke(width = state.widthCollection[state.indexCounter.toString()] ?: state.widthCollection[(state.indexCounter - 1).toString()]!!, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                        )
+                    }
                 }
                 number--
             }
@@ -330,7 +356,7 @@ fun StudioScreen(navController: NavController) {
 }
 
 @Composable
-fun ColorOptionRow(viewModel: StudioViewModel, colors: List<Color>, heightRatio: Float) {
+fun ColorOptionRow(viewModel: StudioViewModel, colors: List<Int>, heightRatio: Float) {
     Row(
         modifier = Modifier
             .fillMaxHeight(heightRatio)

@@ -1,5 +1,8 @@
 package com.jaredaaronlogan.myapplication.ui.repositories
 
+import android.graphics.Path
+import androidx.compose.ui.graphics.AndroidPath
+import androidx.compose.ui.graphics.Color
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -7,12 +10,13 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.jaredaaronlogan.myapplication.ui.components.Drawing
+import com.jaredaaronlogan.myapplication.ui.components.Segment
 import com.jaredaaronlogan.myapplication.ui.models.Lobby
 import com.jaredaaronlogan.myapplication.ui.models.Player
 import kotlin.random.Random
 
 object LobbyRepo {
-    private val db = Firebase.database
+    val db = Firebase.database
     fun createLobby(): String {
 
         val lobbyRef = db.getReference("lobbies")
@@ -50,20 +54,21 @@ object LobbyRepo {
         )
 
         db.getReference("lobbies").child(joinCode).child("players").child(player.id ?: "").setValue(player)
+
         readData(joinCode)
     }
 
-    fun saveImage(drawing: Drawing) {
-        val drawingRef = db.getReference("drawings")
-        drawingRef.child("drawing1").setValue(drawing)
-    }
+//    fun saveImage(drawing: Drawing) {
+//        val drawingRef = db.getReference("drawings")
+//        drawingRef.child("drawing1").setValue(drawing)
+//    }
 
     private fun readData(joinCode: String) {
         val lobbyRef = db.getReference("lobbies").child(joinCode)
         lobbyRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val test = snapshot.child("players").getValue<Map<String, Player>>()
-                for (player in test?.values ?: emptyList()) {
+                val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
+                for (player in playersValues?.values ?: emptyList()) {
                     println(player.screenName)
                 }
             }
@@ -106,3 +111,25 @@ object LobbyRepo {
         return screenNames.random()
     }
 }
+//val drawing: Drawing
+//val segments = ArrayList<Segment>()
+//val sketchRef = LobbyRepo.db.getReference("drawings").child(drawingCode)
+//sketchRef.addValueEventListener(object : ValueEventListener {
+//    override fun onDataChange(snapshot: DataSnapshot) {
+//        val segments = snapshot.child("segments").children
+//        for (seg in segments) {
+//            var color = seg.child("color-0d7_KjU").getValue<Long>()
+//            var path = AndroidPath(seg.child("path").getValue<Path>()!!)
+//            var width = seg.child("width").getValue<Float>()
+//            println(color)
+//            println(path)
+//            println(path.getBounds())
+//            println(width)
+//            val newSeg = Segment(
+//                color = Color(color!!),
+//                path = path,
+//                width = width!!
+//            )
+//            segments.plus(newSeg)
+//
+//        }
