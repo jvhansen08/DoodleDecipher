@@ -35,11 +35,8 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
 
                 for (player in playersValues?.values ?: emptyList()) {
                     if (player.host) hostExists = true
-                    println(player.screenName)
-                    if (!(player in uiState._players)) {
+                    if (player !in uiState._players) {
                         uiState._players.add(player)
-                        println(player.id)
-                        println(UserRepository.getCurrentUserId())
                     }
                     if (!hostExists) uiState._players[0].host = true
                 }
