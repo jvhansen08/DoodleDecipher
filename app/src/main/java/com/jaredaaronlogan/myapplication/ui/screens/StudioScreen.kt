@@ -30,9 +30,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.jaredaaronlogan.myapplication.ui.components.ColorOption
 import com.jaredaaronlogan.myapplication.ui.components.WidthOption
-import com.jaredaaronlogan.myapplication.ui.theme.black1
 import com.jaredaaronlogan.myapplication.ui.viewmodels.StudioViewModel
-import org.intellij.lang.annotations.JdkConstants
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -44,6 +42,10 @@ fun StudioScreen(navController: NavController) {
     val state = viewModel.uiState
     var choosingColor by remember { mutableStateOf(false) }
     var choosingWidth by remember { mutableStateOf(false) }
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val screenHeight = LocalConfiguration.current.screenHeightDp
+    println(screenWidth)
+    println(screenHeight)
 
     Column(
         modifier = Modifier
@@ -139,11 +141,12 @@ fun StudioScreen(navController: NavController) {
                             MotionEvent.ACTION_DOWN -> {
                                 action.value = it
                                 state.yValuesPath = ArrayList()
-                                state.yValuesPath.add(it.y)
+                                state.yValuesPath.add(it.y * screenHeight)
                                 state.xValuesPath = ArrayList()
-                                state.xValuesPath.add(it.x)
+                                state.xValuesPath.add(it.x * screenWidth)
                                 state.widthCollection[state.indexCounter.toString()] = state.width
-                                state.colorCollection[state.indexCounter.toString()] = state.penColor
+                                state.colorCollection[state.indexCounter.toString()] =
+                                    state.penColor
                                 state.segment
                                     .path
                                     .moveTo(it.x, it.y)
@@ -153,8 +156,8 @@ fun StudioScreen(navController: NavController) {
                             MotionEvent.ACTION_MOVE -> {
                                 action.value = it
                                 if (it.y >= 0) {
-                                    state.xValuesPath.add(it.x)
-                                    state.yValuesPath.add(it.y)
+                                    state.xValuesPath.add(it.x * screenWidth)
+                                    state.yValuesPath.add(it.y * screenHeight)
                                     state.segment
                                         .path
                                         .lineTo(it.x, it.y)
@@ -172,9 +175,9 @@ fun StudioScreen(navController: NavController) {
                     val path = Path()
                     val xVals = state.xCollection[i.toString()]
                     val yVals = state.yCollection[i.toString()]
-                    path.moveTo(xVals?.get(0) ?: 0f , yVals?.get(0) ?: 0f)
+                    path.moveTo((xVals?.get(0)  ?: 0f) / screenWidth , (yVals?.get(0) ?: 0f) / screenHeight)
                     for (j in 1 until xVals!!.size) {
-                        path.lineTo(xVals[j], yVals!![j])
+                        path.lineTo(xVals[j] / screenWidth, yVals!![j] / screenHeight)
                     }
                     drawPath(
                         path = path,
@@ -186,10 +189,10 @@ fun StudioScreen(navController: NavController) {
                 action.value?.let {
                     if (state.xValuesPath.size > 0) {
                         val currPath = Path()
-                        currPath.moveTo(state.xValuesPath[0], state.yValuesPath[0])
+                        currPath.moveTo(state.xValuesPath[0] / screenWidth, state.yValuesPath[0] / screenHeight)
                         val size = state.xValuesPath.size
                         for (i in 1 until size) {
-                            currPath.lineTo(state.xValuesPath[i], state.yValuesPath[i])
+                            currPath.lineTo(state.xValuesPath[i] / screenWidth, state.yValuesPath[i] / screenHeight)
                         }
                         var colorNum = state.colorCollection[state.indexCounter.toString()]
                         if (colorNum == null) colorNum = state.colorCollection[(state.indexCounter - 1).toString()]
