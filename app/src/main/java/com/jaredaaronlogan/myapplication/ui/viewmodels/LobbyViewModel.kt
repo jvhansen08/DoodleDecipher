@@ -36,11 +36,14 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
                 println(uiState.startGameSuccess)
                 for (player in playersValues?.values ?: emptyList()) {
                     if (player.host) hostExists = true
-                    if (player !in uiState._players) {
-                        uiState._players.add(player)
+                    var idExists = false
+                    for (currPlayer in uiState._players) {
+                        if (currPlayer.id == player.id)
+                            idExists = true
                     }
-                    if (!hostExists) uiState._players[0].host = true
+                    if (!idExists) uiState._players.add(player)
                 }
+                if (!hostExists) uiState._players[0].host = true
             }
 
             override fun onCancelled(error: DatabaseError) {
