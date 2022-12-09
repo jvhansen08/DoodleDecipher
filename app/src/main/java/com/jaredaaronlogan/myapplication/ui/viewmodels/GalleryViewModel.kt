@@ -1,8 +1,10 @@
 package com.jaredaaronlogan.myapplication.ui.viewmodels
 
 import android.app.Application
-import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -10,21 +12,16 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.jaredaaronlogan.myapplication.ui.screens.*
 
 class GalleryScreenState {
     var colorCollectionIndex by mutableStateOf("0")
     val _colorCollectionValue = mutableStateListOf<Int>()
     val colorCollectionValue: List<Int> get() = _colorCollectionValue
     var indexCounter by mutableStateOf(0)
-    var widthCollectionIndex by mutableStateOf("0")
     var _widthCollectionValue = mutableStateListOf<Float>()
     val widthCollectionValue: List<Float> get() = _widthCollectionValue
-    var xCollectionIndex by mutableStateOf("0")
     var xCollectionValue = mutableStateListOf<ArrayList<Float>>()
-    var yCollectionIndex by mutableStateOf("0")
     var yCollectionValue = mutableStateListOf<ArrayList<Float>>()
-    var triggerRecomposition by mutableStateOf(0)
 }
 
 
@@ -58,13 +55,6 @@ class GalleryViewModel(application: Application): AndroidViewModel(application) 
                     }
                     uiState.yCollectionValue.add(tempArrayY)
                 }
-
-                println(uiState.colorCollectionValue[0])
-                println(uiState.widthCollectionValue[0])
-                println(uiState.xCollectionValue[0])
-                println(uiState.yCollectionValue[0])
-                println(uiState.indexCounter)
-                uiState.triggerRecomposition--
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")

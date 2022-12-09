@@ -7,15 +7,13 @@ import androidx.lifecycle.AndroidViewModel
 import com.jaredaaronlogan.myapplication.ui.components.Drawing
 import com.jaredaaronlogan.myapplication.ui.components.Segment
 import com.jaredaaronlogan.myapplication.ui.repositories.DrawingRepo
-import com.jaredaaronlogan.myapplication.ui.repositories.TempRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 import com.jaredaaronlogan.myapplication.ui.theme.*
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class StudioScreenState {
-    val history = LinkedList<Set<ArrayList<Float>>>()
+    val history = LinkedList<HistoryEntry>()
 
     var yValuesPath = ArrayList<Float>()
     var xValuesPath = ArrayList<Float>()
@@ -59,7 +57,6 @@ class StudioScreenState {
 
 class StudioViewModel(application: Application): AndroidViewModel(application) {
     val uiState = StudioScreenState()
-    val repo = TempRepo
     val realRepo = DrawingRepo
     fun saveSegment() {
         uiState.history.clear()
@@ -79,11 +76,6 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun saveImage() {
-        repo.indexCounter = uiState.indexCounter
-        repo.colorCollection = uiState.colorCollection
-        repo.widthCollection = uiState.widthCollection
-        repo.xCollection = uiState.xCollection
-        repo.yCollection = uiState.yCollection
         val drawing = Drawing(
             xCollection = uiState.xCollection,
             yCollection = uiState.yCollection,
@@ -108,10 +100,13 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
         if (uiState.indexCounter > 0) {
             val lastX = uiState.xCollection[(uiState.indexCounter - 1).toString()]
             val lastY = uiState.yCollection[(uiState.indexCounter - 1).toString()]
+            val lastColor = uiState.colorCollection[(uiState.indexCounter - 1).toString()]
+            val lastWidth = uiState.widthCollection[(uiState.indexCounter - 1).toString()]
+            val currSegment = HistoryEntry(lastX!!, lastY!!, lastWidth!!, lastColor!!)
             uiState.xCollection[(uiState.indexCounter - 1).toString()]!!.clear()
             uiState.yCollection[(uiState.indexCounter - 1).toString()]!!.clear()
             uiState.indexCounter--
-            uiState.history.push(setOf(lastX!!, lastY!!))
+            uiState.history.push(currSegment)
         }
     }
 
@@ -124,4 +119,7 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
 //        }
 //    }
 
+}
+
+class HistoryEntry(val xVals: ArrayList<Float>, val yVals: ArrayList<Float>, val width: Float, val color: Int) {
 }
