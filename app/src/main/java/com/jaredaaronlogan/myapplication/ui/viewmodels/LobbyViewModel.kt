@@ -41,7 +41,7 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
                         println(player.id)
                         println(UserRepository.getCurrentUserId())
                     }
-                    if (!hostExists) uiState._players.get(0).host = true
+                    if (!hostExists) uiState._players[0].host = true
                 }
             }
 
