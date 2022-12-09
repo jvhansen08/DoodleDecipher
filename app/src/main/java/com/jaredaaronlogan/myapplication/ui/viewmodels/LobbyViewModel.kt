@@ -31,6 +31,7 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
                 var hostExists = false
+//                uiState.startGameSuccess = snapshot.child("gameStarted").getValue<Boolean>() == true
                 for (player in playersValues?.values ?: emptyList()) {
                     if (player.host) hostExists = true
                     println(player.screenName)

@@ -33,6 +33,7 @@ object LobbyRepo {
         val lobby = Lobby(
             hostId = UserRepository.getCurrentUserId(),
             joinCode = joinCode,
+            gameStarted = false,
         )
 
         lobbyRef.child(lobby.joinCode ?: "").setValue(lobby)
