@@ -27,6 +27,7 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
     val uiState = LobbyScreenState()
 
     fun getPlayers(joinCode: String) {
+        uiState._players.clear()
         val lobbyRef = LobbyRepo.db.getReference("lobbies").child(joinCode)
         lobbyRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
