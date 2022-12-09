@@ -45,7 +45,7 @@ fun StudioScreen(navController: NavController) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val screenHeight = LocalConfiguration.current.screenHeightDp
     println(screenWidth)
-    println(screenWidth.dp.value)
+    println(screenHeight)
 
     Column(
         modifier = Modifier
