@@ -25,9 +25,6 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
     val viewModel: LobbyViewModel = viewModel()
     val state = viewModel.uiState
     val scope = rememberCoroutineScope()
-    if (state.startGameSuccess) {
-        navController.navigate(Routes.Prompt.route)
-    }
 
     LaunchedEffect(true) {
         viewModel.getPlayers(joinCode)
@@ -70,8 +67,8 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
             ) {
                 Button(onClick = {
                     scope.launch {
-                        viewModel.startGame(joinCode)
-//                        viewModel.getPlayers(joinCode)
+                        viewModel.startGame()
+                        viewModel.getPlayers(joinCode)
                     }
                 }) {
                     Text(text = "Start Game")
