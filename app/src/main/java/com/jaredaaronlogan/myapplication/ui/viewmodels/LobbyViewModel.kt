@@ -17,7 +17,6 @@ import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 class LobbyScreenState {
     val _players = mutableStateListOf<Player>()
     val players: List<Player> get() = _players
-    var isHost by mutableStateOf(false)
     var errorMessage by mutableStateOf("")
     var startGameSuccess by mutableStateOf(false)
     var gameOpen by mutableStateOf(true)
@@ -64,9 +63,9 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         val uId = UserRepository.getCurrentUserId()
         for(player in uiState._players) {
             if (player.id == uId) {
-                uiState.isHost = player.host
+                return player.host
             }
         }
-        return uiState.isHost
+        return true
     }
 }

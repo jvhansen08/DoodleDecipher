@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.jaredaaronlogan.myapplication.ui.components.PlayerListItem
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
+import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 import com.jaredaaronlogan.myapplication.ui.viewmodels.LobbyViewModel
 import kotlinx.coroutines.launch
 
@@ -63,7 +64,7 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
                 PlayerListItem(player = player)
             }
         }
-        if (true) {
+        if (viewModel.isHost()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
