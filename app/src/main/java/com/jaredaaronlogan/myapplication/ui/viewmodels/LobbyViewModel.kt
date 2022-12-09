@@ -18,6 +18,7 @@ import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 class LobbyScreenState {
     val _players = mutableStateListOf<Player>()
     val players: List<Player> get() = _players
+    var isHost by mutableStateOf(false)
     var lobby by mutableStateOf<Lobby?>(null)
     var errorMessage by mutableStateOf("")
     var startGameSuccess by mutableStateOf(false)
@@ -31,13 +32,16 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         lobbyRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
+                var hostExists = false
                 for (player in playersValues?.values ?: emptyList()) {
+                    if (player.host) hostExists = true
                     println(player.screenName)
                     if (!(player in uiState._players)) {
                         uiState._players.add(player)
                         println(player.id)
                         println(UserRepository.getCurrentUserId())
                     }
+                    if (!hostExists) uiState._players.get(0).host = true
                 }
             }
 
@@ -57,9 +61,9 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         val uId = UserRepository.getCurrentUserId()
         for(player in uiState._players) {
             if (player.id == uId) {
-                return player.host
+                uiState.isHost = player.host
             }
         }
-        return false
+        return uiState.isHost
     }
 }
