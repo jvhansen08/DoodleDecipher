@@ -30,6 +30,7 @@ class StudioScreenState {
     var drawingCount = 0
 
     var round = 0
+    var nextPlayerId = ""
 
     var penColor = black1.toInt()
     var width = 10f
@@ -115,6 +116,7 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun submitDrawing(gameId: String) {
+
         val drawing = Drawing(
             xCollection = uiState.xCollection,
             yCollection = uiState.yCollection,
