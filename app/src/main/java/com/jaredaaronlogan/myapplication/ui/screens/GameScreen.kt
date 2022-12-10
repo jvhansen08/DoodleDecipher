@@ -1,19 +1,56 @@
 package com.jaredaaronlogan.myapplication.ui.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.viewmodels.GameViewModel
 
 @Composable
-fun GameScreen(navController: NavController, gameCode: String) {
+fun GameScreen(navController: NavController, gameId: String) {
     val viewModel: GameViewModel = viewModel()
     val state = viewModel.uiState
+    viewModel.initialize(gameId)
+    println("Welcome to the game screen")
 
     if (state.round % 2 == 0){
-        navController.navigate(Routes.Gallery.route)
+        Button(onClick = { navController.navigate(Routes.Gallery.route + "?gameId=$gameId") }) {
+            Text(text = "Let me guess...")
+        }
+
     } else {
-        navController.navigate(Routes.Studio.route)
+        Column(
+            modifier = Modifier
+                .background(color = Color(0xFFf8EDEB))
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Draw something!", style = MaterialTheme.typography.h3)
+            }
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(onClick = { navController.navigate(Routes.Studio.route + "?gameId=$gameId") }) {
+                    Text(text = "To the drawing board!")
+                }
+            }
+        }
     }
 }

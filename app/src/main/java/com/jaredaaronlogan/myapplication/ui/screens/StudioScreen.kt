@@ -30,12 +30,13 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.jaredaaronlogan.myapplication.ui.components.ColorOption
 import com.jaredaaronlogan.myapplication.ui.components.WidthOption
+import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.viewmodels.StudioViewModel
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun StudioScreen(navController: NavController, gameCode: String) {
+fun StudioScreen(navController: NavController, gameId: String) {
     val action: MutableState<Any?> = remember {  mutableStateOf(null) }
     var number by remember { mutableStateOf(0) }
     val viewModel: StudioViewModel = viewModel()
@@ -44,9 +45,7 @@ fun StudioScreen(navController: NavController, gameCode: String) {
     var choosingWidth by remember { mutableStateOf(false) }
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val screenHeight = LocalConfiguration.current.screenHeightDp
-    println(screenWidth)
-    println(screenHeight)
-
+    println("Welcome to the studio screen")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -253,7 +252,7 @@ fun StudioScreen(navController: NavController, gameCode: String) {
                                 Button(
                                     onClick = {
                                         viewModel.saveImage()
-                                        navController.popBackStack()
+                                        navController.navigate(Routes.Waiting.route + "?gameId=$gameId")
                                     }
                                 ) {
                                     Text("Send")
