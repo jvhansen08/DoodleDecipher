@@ -7,9 +7,11 @@ import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.viewmodels.WaitingViewModel
 
 @Composable
-fun WaitingScreen(navController: NavController, gameCode: String) {
+fun WaitingScreen(navController: NavController, gameId: String) {
     val viewModel: WaitingViewModel = viewModel()
     val state = viewModel.uiState
+
+    viewModel.initialize(gameId)
 
     if (!state.waiting) {
         navController.navigate(Routes.Waiting.route)

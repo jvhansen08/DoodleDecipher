@@ -62,7 +62,7 @@ fun PromptScreen(navController: NavController, gameId: String) {
             Button(
                 onClick = {
                     viewModel.submitPrompt(gameId, state.prompt, 0)
-                    navController.navigate(Routes.Waiting.route)
+                    navController.navigate(Routes.Waiting.route + "?gameId=$gameId")
                 },
             ) {
                 Text(text = "Submit Prompt")
