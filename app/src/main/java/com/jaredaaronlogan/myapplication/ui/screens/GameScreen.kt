@@ -23,10 +23,23 @@ fun GameScreen(navController: NavController, gameId: String) {
     println("Welcome to the game screen")
 
     if (state.round % 2 == 0){
-        Button(onClick = { navController.navigate(Routes.Gallery.route + "?gameId=$gameId") }) {
-            Text(text = "Let me guess...")
+        Column(
+            modifier = Modifier
+                .background(color = Color(0xFFf8EDEB))
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 4.dp)
+            ) {
+                Button(onClick = { navController.navigate(Routes.Gallery.route + "?gameId=$gameId") }) {
+                    Text(text = "Let me guess...")
+                }
+            }
         }
-
     } else {
         Column(
             modifier = Modifier
