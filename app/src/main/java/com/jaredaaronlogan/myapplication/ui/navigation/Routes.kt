@@ -1,7 +1,5 @@
 package com.jaredaaronlogan.myapplication.ui.navigation
 
-import android.window.SplashScreen
-
 data class Screen(val route: String)
 
 object Routes {
@@ -15,5 +13,7 @@ object Routes {
     val SignUp = Screen("signup")
     val Splash = Screen("splash")
     val Prompt = Screen("prompt")
+    val Game = Screen("game")
+    val Waiting = Screen("waiting")
     val Lobby = Screen("lobby")
 }

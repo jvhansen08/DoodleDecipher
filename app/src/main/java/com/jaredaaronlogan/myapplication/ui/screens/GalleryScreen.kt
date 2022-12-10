@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import com.jaredaaronlogan.myapplication.ui.viewmodels.GalleryViewModel
 
 @Composable
-fun GalleryScreen(navController: NavController) {
+fun GalleryScreen(navController: NavController, gameCode: String) {
     val viewModel: GalleryViewModel = viewModel()
     val state = viewModel.uiState
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp.value
