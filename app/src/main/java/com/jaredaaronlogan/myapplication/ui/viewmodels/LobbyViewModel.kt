@@ -17,7 +17,6 @@ import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 class LobbyScreenState {
     val _players = mutableStateListOf<Player>()
     val players: List<Player> get() = _players
-    var isHost by mutableStateOf(false)
     var errorMessage by mutableStateOf("")
     var startGameSuccess by mutableStateOf(false)
     var gameOpen by mutableStateOf(true)
@@ -36,11 +35,14 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
                 println(uiState.startGameSuccess)
                 for (player in playersValues?.values ?: emptyList()) {
                     if (player.host) hostExists = true
-                    if (player !in uiState._players) {
-                        uiState._players.add(player)
+                    var idExists = false
+                    for (currPlayer in uiState._players) {
+                        if (currPlayer.id == player.id)
+                            idExists = true
                     }
-                    if (!hostExists) uiState._players[0].host = true
+                    if (!idExists) uiState._players.add(player)
                 }
+                if (!hostExists) uiState._players[0].host = true
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -61,9 +63,9 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         val uId = UserRepository.getCurrentUserId()
         for(player in uiState._players) {
             if (player.id == uId) {
-                uiState.isHost = player.host
+                return player.host
             }
         }
-        return uiState.isHost
+        return false
     }
 }
