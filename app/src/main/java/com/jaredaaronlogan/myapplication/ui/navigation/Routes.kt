@@ -15,5 +15,6 @@ object Routes {
     val Prompt = Screen("prompt")
     val Game = Screen("game")
     val Waiting = Screen("waiting")
+    val End = Screen("end")
     val Lobby = Screen("lobby")
 }

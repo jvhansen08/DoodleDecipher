@@ -44,14 +44,18 @@ fun GalleryScreen(navController: NavController, gameId: String) {
                 .fillMaxWidth()
                 .background(color = Color(0xFFf8EDEB)),
         ) {
-            FormField(value = state.guess, onValueChange = {state.guess = it}, placeholder = {Text("Guess")})
-            Button(
-                onClick = {
-                    viewModel.submitGuess(gameId)
-                    navController.navigate(Routes.Waiting.route + "?gameId=$gameId")
-                },
-            ) {
-                Text(text = "Submit")
+            Column(modifier = Modifier.fillMaxWidth(.6f)) {
+                FormField(value = state.guess, onValueChange = {state.guess = it}, placeholder = {Text("Guess")})
+            }
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = {
+                        viewModel.submitGuess(gameId)
+                        navController.navigate(Routes.Waiting.route + "?gameId=$gameId")
+                    },
+                ) {
+                    Text(text = "Submit")
+                }
             }
         }
 

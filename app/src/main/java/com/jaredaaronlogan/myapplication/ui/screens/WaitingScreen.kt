@@ -23,38 +23,44 @@ fun WaitingScreen(navController: NavController, gameId: String) {
     val state = viewModel.uiState
     println("Welcome to the waiting screen")
     viewModel.initialize(gameId)
-
-
-    if (!state.waiting) {
-        Column(
-            modifier = Modifier
-                .background(color = Color(0xFFf8EDEB))
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+    if (state.gameOver) {
+        Text(text = "Game Over")
+        Button(onClick = { navController.navigate(Routes.End.route + "?gameId$gameId") }) {
+            Text(text = "end")
+        }
+    } else {
+        if (!state.waiting) {
+            Column(
+                modifier = Modifier
+                    .background(color = Color(0xFFf8EDEB))
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Bottom
             ) {
-                Button(onClick = { navController.navigate(Routes.Game.route + "?gameId=$gameId") }) {
-                    Text(text = "Next Round")
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(onClick = { navController.navigate(Routes.Game.route + "?gameId=$gameId") }) {
+                        Text(text = "Next Round")
+                    }
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .background(color = Color(0xFFf8EDEB))
+                    .fillMaxSize(),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Loader()
                 }
             }
         }
-    } else {
-        Column(
-            modifier = Modifier
-                .background(color = Color(0xFFf8EDEB))
-                .fillMaxSize(),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Loader()
-            }
-        }
     }
+
 }
