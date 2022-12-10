@@ -17,4 +17,8 @@ class PromptScreenViewModel(application: Application): AndroidViewModel(applicat
     }
 
     val uiState = PromptScreenState()
+
+    fun markAsReady() {
+
+    }
 }

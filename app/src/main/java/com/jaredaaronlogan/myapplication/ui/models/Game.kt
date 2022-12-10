@@ -8,6 +8,6 @@ data class Game(
     val playerMap: Map<String, String>? = null,
     val maxRounds: Int = 0,
     val roundCounter: Int = 0,
-    val drawingsMap: Map<Int, Map<String, Drawing>>? = null,
-    val promptsMap: Map<Int, Map<String, String>>? = null,
+    val drawingsMap: Map<String, Map<String, Drawing>>? = null,
+    val promptsMap: Map<String, Map<String, String>>? = null,
 )
