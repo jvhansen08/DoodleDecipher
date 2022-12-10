@@ -12,6 +12,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.jaredaaronlogan.myapplication.ui.repositories.GameStateRepo
+import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
+import kotlin.math.round
 
 class GalleryScreenState {
     var colorCollectionIndex by mutableStateOf("0")
@@ -22,15 +25,37 @@ class GalleryScreenState {
     val widthCollectionValue: List<Float> get() = _widthCollectionValue
     var xCollectionValue = mutableStateListOf<ArrayList<Float>>()
     var yCollectionValue = mutableStateListOf<ArrayList<Float>>()
+
+    var guess by mutableStateOf("")
+    var round = 0
 }
 
 
 class GalleryViewModel(application: Application): AndroidViewModel(application) {
     val uiState = GalleryScreenState()
 
-    fun getImage(id: String) {
-        val db = Firebase.database
-        val imageRef = db.getReference("drawings").child(id)
+    fun initialize(gameId: String) {
+        val gameRef = GameStateRepo.db.getReference("games").child(gameId)
+        gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
+                println(uiState.round)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+        getImage(UserRepository.getCurrentUserId()!!, gameId)
+    }
+    fun getImage(userId: String, gameId: String) {
+        val db = Firebase.database.reference
+        val imageRef = db
+            .child("games")
+            .child(gameId)
+            .child("drawingsMap")
+            .child((uiState.round - 1).toString())
+            .child(userId)
+        println(imageRef)
         imageRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (color in snapshot.child("colorCollection").children) {
@@ -60,5 +85,9 @@ class GalleryViewModel(application: Application): AndroidViewModel(application) 
                 TODO("Not yet implemented")
             }
         })
+    }
+
+    fun submitGuess(gameId: String) {
+        GameStateRepo.submitPrompt(gameId, uiState.guess, uiState.round)
     }
 }
