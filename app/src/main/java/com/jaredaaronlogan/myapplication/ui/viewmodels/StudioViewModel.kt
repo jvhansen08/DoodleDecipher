@@ -69,7 +69,6 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
         gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
-                uiState.nextPlayerId = snapshot.child("playersMap").child(UserRepository.getCurrentUserId()!!).getValue<String>()!!
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
@@ -126,7 +125,7 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
             indexCounter = uiState.indexCounter,
             id = UserRepository.getCurrentUserId() + uiState.drawingCount
         )
-        GameStateRepo.submitDrawing(gameId, drawing, uiState.round, uiState.nextPlayerId)
+        GameStateRepo.submitDrawing(gameId, drawing, uiState.round)
     }
 
 }

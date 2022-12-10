@@ -28,6 +28,7 @@ class GalleryScreenState {
 
     var guess by mutableStateOf("")
     var round = 0
+    var nextPlayerId = ""
 }
 
 
@@ -39,22 +40,22 @@ class GalleryViewModel(application: Application): AndroidViewModel(application) 
         gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
-                println(uiState.round)
+                uiState.nextPlayerId = snapshot.child("playersMap").child(UserRepository.getCurrentUserId()!!).getValue<String>()!!
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
         })
-        getImage(UserRepository.getCurrentUserId()!!, gameId)
+        getImage(gameId)
     }
-    fun getImage(userId: String, gameId: String) {
+    fun getImage(gameId: String) {
         val db = Firebase.database.reference
         val imageRef = db
             .child("games")
             .child(gameId)
             .child("drawingsMap")
             .child((uiState.round - 1).toString())
-            .child(userId)
+            .child(uiState.nextPlayerId)
         println(imageRef)
         imageRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
