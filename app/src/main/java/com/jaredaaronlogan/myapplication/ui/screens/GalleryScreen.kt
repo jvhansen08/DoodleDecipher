@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -19,18 +21,17 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.jaredaaronlogan.myapplication.ui.components.FormField
+import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.viewmodels.GalleryViewModel
 
 @Composable
-fun GalleryScreen(navController: NavController, gameCode: String) {
+fun GalleryScreen(navController: NavController, gameId: String) {
     val viewModel: GalleryViewModel = viewModel()
     val state = viewModel.uiState
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp.value
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp.value
-    LaunchedEffect(true) {
-        viewModel.getImage("z85zaEM15Sa8IIiGs2Zxpp6wDK220")
-    }
-
+    viewModel.initialize(gameId)
 
     Column(
         modifier = Modifier
@@ -43,10 +44,14 @@ fun GalleryScreen(navController: NavController, gameCode: String) {
                 .fillMaxWidth()
                 .background(color = Color(0xFFf8EDEB)),
         ) {
+            FormField(value = state.guess, onValueChange = {state.guess = it}, placeholder = {Text("Guess")})
             Button(
-                onClick = { navController.popBackStack() },
+                onClick = {
+                    viewModel.submitGuess(gameId)
+                    navController.navigate(Routes.Waiting.route + "?gameId=$gameId")
+                },
             ) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Go Back",)
+                Text(text = "Submit")
             }
         }
 

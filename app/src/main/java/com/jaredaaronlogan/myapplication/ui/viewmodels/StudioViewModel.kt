@@ -4,9 +4,14 @@ import android.app.Application
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.lifecycle.AndroidViewModel
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import com.jaredaaronlogan.myapplication.ui.components.Drawing
 import com.jaredaaronlogan.myapplication.ui.components.Segment
 import com.jaredaaronlogan.myapplication.ui.repositories.DrawingRepo
+import com.jaredaaronlogan.myapplication.ui.repositories.GameStateRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 import com.jaredaaronlogan.myapplication.ui.theme.*
 import java.util.*
@@ -24,8 +29,8 @@ class StudioScreenState {
     var indexCounter = 0
     var drawingCount = 0
 
+    var round = 0
 
-    var cleared = false
     var penColor = black1.toInt()
     var width = 10f
     var segment = Segment(Path(), Color(penColor), width,)
@@ -57,7 +62,18 @@ class StudioScreenState {
 
 class StudioViewModel(application: Application): AndroidViewModel(application) {
     val uiState = StudioScreenState()
-    val realRepo = DrawingRepo
+
+    fun initialize(gameId: String) {
+        val gameRef = GameStateRepo.db.getReference("games").child(gameId)
+        gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
     fun saveSegment() {
         uiState.history.clear()
         uiState.xCollection[uiState.indexCounter.toString()] = uiState.xValuesPath
@@ -73,18 +89,6 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
         uiState.yValuesPath.clear()
         uiState.yCollection.clear()
         uiState.xCollection.clear()
-    }
-
-    fun saveImage() {
-        val drawing = Drawing(
-            xCollection = uiState.xCollection,
-            yCollection = uiState.yCollection,
-            colorCollection = uiState.colorCollection,
-            widthCollection = uiState.widthCollection,
-            indexCounter = uiState.indexCounter,
-            id = UserRepository.getCurrentUserId() + uiState.drawingCount
-        )
-        realRepo.saveImage(drawing)
     }
 
     fun changeColor(newColor: Int) {
@@ -110,14 +114,17 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-//    fun redo() {
-//        if (uiState.history.size > 0) {
-//            val mostRecent = uiState.history.pollFirst()
-//            uiState.xCollection[uiState.indexCounter] = mostRecent.first()
-//            uiState.yCollection[uiState.indexCounter] = mostRecent.first()
-//            uiState.indexCounter++
-//        }
-//    }
+    fun submitDrawing(gameId: String) {
+        val drawing = Drawing(
+            xCollection = uiState.xCollection,
+            yCollection = uiState.yCollection,
+            colorCollection = uiState.colorCollection,
+            widthCollection = uiState.widthCollection,
+            indexCounter = uiState.indexCounter,
+            id = UserRepository.getCurrentUserId() + uiState.drawingCount
+        )
+        GameStateRepo.submitDrawing(gameId, drawing, uiState.round)
+    }
 
 }
 

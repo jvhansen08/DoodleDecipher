@@ -31,6 +31,7 @@ import com.google.android.gms.ads.AdView
 import com.jaredaaronlogan.myapplication.ui.components.ColorOption
 import com.jaredaaronlogan.myapplication.ui.components.WidthOption
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
+import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 import com.jaredaaronlogan.myapplication.ui.viewmodels.StudioViewModel
 
 
@@ -45,7 +46,9 @@ fun StudioScreen(navController: NavController, gameId: String) {
     var choosingWidth by remember { mutableStateOf(false) }
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val screenHeight = LocalConfiguration.current.screenHeightDp
-    println("Welcome to the studio screen")
+
+    viewModel.initialize(gameId)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -251,7 +254,7 @@ fun StudioScreen(navController: NavController, gameId: String) {
                             ) {
                                 Button(
                                     onClick = {
-                                        viewModel.saveImage()
+                                        viewModel.submitDrawing(gameId)
                                         navController.navigate(Routes.Waiting.route + "?gameId=$gameId")
                                     }
                                 ) {
