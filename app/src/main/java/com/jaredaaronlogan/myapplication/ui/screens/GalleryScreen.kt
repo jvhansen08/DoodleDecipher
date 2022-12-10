@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -35,22 +36,28 @@ fun GalleryScreen(navController: NavController, gameId: String) {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .background(color = Color(0xFFf8EDEB))
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //Top bar
         Row(
-            modifier = Modifier
-                .fillMaxHeight(.1f)
-                .fillMaxWidth()
-                .background(color = Color(0xFFf8EDEB)),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(top = 4.dp)
         ) {
             FormField(value = state.guess, onValueChange = {state.guess = it}, placeholder = {Text("Guess")})
+        }
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(top = 4.dp)
+        ) {
             Button(
                 onClick = {
                     viewModel.submitGuess(gameId)
-                    navController.navigate(Routes.Waiting.route + "?gameId=$gameId")
-                },
-            ) {
+                    navController.navigate(Routes.Game.route + "?gameId=$gameId")
+                }) {
                 Text(text = "Submit")
             }
         }
