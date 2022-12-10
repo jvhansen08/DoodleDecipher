@@ -22,7 +22,7 @@ import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 import com.jaredaaronlogan.myapplication.ui.viewmodels.PromptScreenViewModel
 
 @Composable
-fun PromptScreen(navController: NavController) {
+fun PromptScreen(navController: NavController, gameId: String) {
     val viewModel: PromptScreenViewModel = viewModel()
     val state = viewModel.uiState
 
@@ -61,8 +61,8 @@ fun PromptScreen(navController: NavController) {
         ) {
             Button(
                 onClick = {
-//                    viewModel.joinLobby(state.joinCode)
-//                    navController.navigate("lobby?joinCode=${state.joinCode}",)
+                    viewModel.submitPrompt(gameId, state.prompt, 0)
+                    navController.navigate(Routes.Game.route)
                 },
             ) {
                 Text(text = "Submit Prompt")

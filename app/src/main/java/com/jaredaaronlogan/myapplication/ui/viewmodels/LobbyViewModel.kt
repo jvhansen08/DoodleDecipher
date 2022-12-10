@@ -54,8 +54,6 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
     fun startGame(joinCode: String) {
         LobbyRepo.db.getReference("lobbies").child(joinCode).child("gameStarted").setValue(true)
         uiState.errorMessage = ""
-//        uiState.gameOpen = false
-//        uiState.startGameSuccess = true
         print("Starting game...")
     }
 
