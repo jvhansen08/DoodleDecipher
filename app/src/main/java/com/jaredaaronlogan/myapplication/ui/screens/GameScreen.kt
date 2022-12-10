@@ -1,10 +1,7 @@
 package com.jaredaaronlogan.myapplication.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -12,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
@@ -41,11 +39,18 @@ fun GameScreen(navController: NavController, gameId: String) {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Draw something!", style = MaterialTheme.typography.h3)
+                Text(text = "Your Prompt:", style = MaterialTheme.typography.h4)
             }
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = state.prompt, style = MaterialTheme.typography.h6)
+            }
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 4.dp)
             ) {
                 Button(onClick = { navController.navigate(Routes.Studio.route + "?gameId=$gameId") }) {
                     Text(text = "To the drawing board!")
