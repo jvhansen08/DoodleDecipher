@@ -35,7 +35,7 @@ import com.jaredaaronlogan.myapplication.ui.viewmodels.StudioViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun StudioScreen(navController: NavController) {
+fun StudioScreen(navController: NavController, gameCode: String) {
     val action: MutableState<Any?> = remember {  mutableStateOf(null) }
     var number by remember { mutableStateOf(0) }
     val viewModel: StudioViewModel = viewModel()

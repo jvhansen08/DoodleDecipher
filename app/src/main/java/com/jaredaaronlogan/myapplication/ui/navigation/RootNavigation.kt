@@ -22,14 +22,36 @@ fun RootNavigation() {
         }
         navigation(route = Routes.GameNavigation.route, startDestination = Routes.Home.route) {
             composable(Routes.Home.route) { HomeScreen(navController = navController) }
-            composable(Routes.Gallery.route) { GalleryScreen(navController = navController)}
-            composable(Routes.Studio.route) { StudioScreen(navController = navController) }
             composable(Routes.Prompt.route) { PromptScreen(navController = navController) }
             composable(
-                route = "lobby?joinCode={joinCode}",
+                route = Routes.Lobby.route + "?joinCode={joinCode}",
                 arguments = listOf(navArgument("joinCode") { defaultValue = "001000" })
             ) { navBackStackEntry ->
                 LobbyScreen(navController = navController, navBackStackEntry.arguments?.getString("joinCode") ?: "")
+            }
+            composable(
+                route = Routes.Gallery.route + "?gameCode={gameCode}",
+                arguments = listOf(navArgument("gameCode") { defaultValue = "000000" })
+            ) { navBackStackEntry ->
+                GalleryScreen(navController = navController, navBackStackEntry.arguments?.getString("gameCode") ?: "")
+            }
+            composable(
+                route = Routes.Studio.route + "?gameCode={gameCode}",
+                arguments = listOf(navArgument("gameCode") { defaultValue = "000000" })
+            ) { navBackStackEntry ->
+                StudioScreen(navController = navController, navBackStackEntry.arguments?.getString("gameCode") ?: "")
+            }
+            composable(
+                route = Routes.Game.route + "?gameCode={gameCode}",
+                arguments = listOf(navArgument("gameCode") { defaultValue = "000000" })
+            ) { navBackStackEntry ->
+                GameScreen(navController = navController, navBackStackEntry.arguments?.getString("gameCode") ?: "")
+            }
+            composable(
+                route = Routes.Waiting.route + "?gameCode={gameCode}",
+                arguments = listOf(navArgument("gameCode") { defaultValue = "000000" })
+            ) { navBackStackEntry ->
+                WaitingScreen(navController = navController, navBackStackEntry.arguments?.getString("gameCode") ?: "")
             }
         }
         composable(route = Routes.Splash.route) { SplashScreen(navController) }
