@@ -40,41 +40,23 @@ class GalleryViewModel(application: Application): AndroidViewModel(application) 
         gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
-                uiState.nextPlayerId = snapshot.child("playersMap").child(UserRepository.getCurrentUserId()!!).getValue<String>()!!
-            }
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
-        getImage(gameId)
-    }
-    fun getImage(gameId: String) {
-        val db = Firebase.database.reference
-        val imageRef = db
-            .child("games")
-            .child(gameId)
-            .child("drawingsMap")
-            .child((uiState.round - 1).toString())
-            .child(uiState.nextPlayerId)
-        println(imageRef)
-        imageRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (color in snapshot.child("colorCollection").children) {
+                uiState.nextPlayerId = snapshot.child("playerMap").child(UserRepository.getCurrentUserId()!!).getValue<String>()!!
+                for (color in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("colorCollection").children) {
                     uiState.colorCollectionIndex = color.key.toString()
                     uiState._colorCollectionValue.add(color.getValue<Int>()!!)
                 }
-                uiState.indexCounter = snapshot.child("indexCounter").getValue<Int>() ?: 0
-                for (width in snapshot.child("widthCollection").children) {
+                uiState.indexCounter = snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("indexCounter").getValue<Int>() ?: 0
+                for (width in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("widthCollection").children) {
                     uiState._widthCollectionValue.add(width.getValue<Float>()!!)
                 }
-                for (xValues in snapshot.child("xcollection").children) {
+                for (xValues in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("xcollection").children) {
                     val tempArrayX = ArrayList<Float>()
                     for (xVal in xValues.children) {
                         tempArrayX.add(xVal.getValue<Float>() ?: 0f)
                     }
                     uiState.xCollectionValue.add(tempArrayX)
                 }
-                for (yValues in snapshot.child("ycollection").children) {
+                for (yValues in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("ycollection").children) {
                     val tempArrayY = ArrayList<Float>()
                     for (yVal in yValues.children) {
                         tempArrayY.add(yVal.getValue<Float>() ?: 0f)
@@ -87,6 +69,7 @@ class GalleryViewModel(application: Application): AndroidViewModel(application) 
             }
         })
     }
+
 
     fun submitGuess(gameId: String) {
         GameStateRepo.submitPrompt(gameId, uiState.guess, uiState.round)
