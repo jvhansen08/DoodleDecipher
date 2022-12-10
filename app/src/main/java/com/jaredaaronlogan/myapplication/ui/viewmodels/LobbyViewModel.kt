@@ -66,6 +66,6 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
                 return player.host
             }
         }
-        return true
+        return false
     }
 }

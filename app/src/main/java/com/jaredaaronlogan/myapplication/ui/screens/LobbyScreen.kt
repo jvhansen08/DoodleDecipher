@@ -58,7 +58,7 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
             Text(text = joinCode, style = MaterialTheme.typography.h3)
         }
         LazyColumn(modifier = Modifier
-            .fillMaxHeight(.8f)
+            .fillMaxHeight(.2f)
             .padding(16.dp)) {
             items(state.players, key = {it.id!!}) { player ->
                 PlayerListItem(player = player)
