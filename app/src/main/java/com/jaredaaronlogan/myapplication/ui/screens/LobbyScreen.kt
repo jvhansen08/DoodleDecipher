@@ -28,7 +28,7 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
     val scope = rememberCoroutineScope()
     if (state.startGameSuccess && state.gameOpen) {
         state.gameOpen = false
-        navController.navigate(Routes.Prompt.route)
+        navController.navigate(Routes.Prompt.route + "?gameId=${joinCode}")
     }
 
     LaunchedEffect(true) {

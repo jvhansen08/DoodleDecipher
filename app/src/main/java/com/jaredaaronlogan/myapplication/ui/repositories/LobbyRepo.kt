@@ -9,8 +9,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.jaredaaronlogan.myapplication.ui.components.Drawing
-import com.jaredaaronlogan.myapplication.ui.components.Segment
 import com.jaredaaronlogan.myapplication.ui.models.Lobby
 import com.jaredaaronlogan.myapplication.ui.models.Player
 import kotlin.random.Random
