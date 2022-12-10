@@ -23,6 +23,13 @@ fun RootNavigation() {
         navigation(route = Routes.GameNavigation.route, startDestination = Routes.Home.route) {
             composable(Routes.Home.route) { HomeScreen(navController = navController) }
             composable(
+                route = Routes.End.route + "?gameId={gameId}",
+                arguments = listOf(navArgument("gameId") { defaultValue = "000000" })
+            ) {
+                    navBackStackEntry ->
+                EndScreen(navController = navController, gameId = navBackStackEntry.arguments?.getString("gameId") ?: "000000")
+            }
+            composable(
                 route = Routes.Lobby.route + "?joinCode={joinCode}",
                 arguments = listOf(navArgument("joinCode") { defaultValue = "000000" })
             ) { navBackStackEntry ->

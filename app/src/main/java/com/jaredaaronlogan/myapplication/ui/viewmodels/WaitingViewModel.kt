@@ -17,6 +17,7 @@ import com.jaredaaronlogan.myapplication.ui.repositories.GameStateRepo
 
 class WaitingScreenState {
     var waiting by mutableStateOf(true)
+    var gameOver by mutableStateOf(false)
 }
 
 class WaitingViewModel(application: Application): AndroidViewModel(application) {
@@ -27,6 +28,7 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
         gameRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val round = snapshot.child("roundCounter").getValue<Int>()!!
+                val finalRound = snapshot.child("maxRounds").getValue<Int>()!!
                 val playerCount = snapshot.child("numPlayers").getValue<Int>()!!
                 var readyPlayers: Long
                 if (round % 2 == 0) {
@@ -41,6 +43,9 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
                         .childrenCount
                 }
                 if (readyPlayers.toInt() == playerCount){
+                    if (round == finalRound) {
+                        uiState.gameOver = true
+                    }
                     uiState.waiting = false
                     gameRef.child("hasNavigated").setValue(true)
                     gameRef.child("roundCounter").setValue(round + 1)

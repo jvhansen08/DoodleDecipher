@@ -1,10 +1,7 @@
 package com.jaredaaronlogan.myapplication.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -23,38 +20,62 @@ fun WaitingScreen(navController: NavController, gameId: String) {
     val state = viewModel.uiState
     println("Welcome to the waiting screen")
     viewModel.initialize(gameId)
-
-
-    if (!state.waiting) {
+    if (state.gameOver) {
         Column(
-            modifier = Modifier
-                .background(color = Color(0xFFf8EDEB))
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom
+            modifier = Modifier.fillMaxSize()
         ) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .fillMaxHeight(.5f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Game Over")
+
+            }
             Row(
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(onClick = { navController.navigate(Routes.Game.route + "?gameId=$gameId") }) {
-                    Text(text = "Next Round")
+                Button(onClick = { navController.navigate(Routes.Home.route + "?gameId$gameId") }) {
+                    Text(text = "Return to main screen")
                 }
             }
         }
     } else {
-        Column(
-            modifier = Modifier
-                .background(color = Color(0xFFf8EDEB))
-                .fillMaxSize(),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+        if (!state.waiting) {
+            Column(
+                modifier = Modifier
+                    .background(color = Color(0xFFf8EDEB))
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Bottom
             ) {
-                Loader()
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(onClick = { navController.navigate(Routes.Game.route + "?gameId=$gameId") }) {
+                        Text(text = "Next Round")
+                    }
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .background(color = Color(0xFFf8EDEB))
+                    .fillMaxSize(),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Loader()
+                }
             }
         }
     }
+
 }
