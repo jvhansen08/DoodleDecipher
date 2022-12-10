@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.jaredaaronlogan.myapplication.ui.components.FormField
 import com.jaredaaronlogan.myapplication.ui.components.PlayerListItem
 import com.jaredaaronlogan.myapplication.ui.models.Game
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
@@ -57,25 +58,71 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
             Text(text = joinCode, style = MaterialTheme.typography.h3)
         }
         LazyColumn(modifier = Modifier
-            .fillMaxHeight(.8f)
+            .fillMaxHeight(.7f)
             .padding(16.dp)) {
             items(state.players, key = {it.id!!}) { player ->
                 PlayerListItem(player = player)
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(.5f)
+                .absolutePadding(left = 15.dp, top = 5.dp, bottom = 5.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(.6f)
+                    .fillMaxHeight()
+            ) {
+                FormField(
+                    value = state.userAlias,
+                    onValueChange = {state.userAlias = it},
+                    placeholder = {Text(text = state.defaultUserAlias)}
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(.7f)
+                        .absolutePadding(right = 15.dp),
+                    onClick = { viewModel.changeAlias(joinCode) }
+                ) {
+                    Text(text = "Change name")
+                }
             }
         }
         if (viewModel.isHost()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .fillMaxHeight()
                     .padding(15.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Button(onClick = {
-                    scope.launch {
-                        viewModel.startGame(joinCode)
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .padding(5.dp)
+                ) {
+                    Text(
+                        style = MaterialTheme.typography.h6,
+                        text = "Player count: ${state._players.size}"
+                    )
+                }
+                Column() {
+                    Button(onClick = {
+                        scope.launch {
+                            viewModel.startGame(joinCode)
+                        }
+                    }) {
+                        Text(text = "Start Game")
                     }
-                }) {
-                    Text(text = "Start Game")
                 }
             }
         }

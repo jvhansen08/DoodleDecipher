@@ -22,6 +22,9 @@ class LobbyScreenState {
     var errorMessage by mutableStateOf("")
     var startGameSuccess by mutableStateOf(false)
     var gameOpen by mutableStateOf(true)
+
+    var userAlias by mutableStateOf("")
+    var defaultUserAlias by mutableStateOf("")
 }
 
 class LobbyViewModel(application: Application): AndroidViewModel(application) {
@@ -34,13 +37,14 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
                 val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
                 var hostExists = false
                 uiState.startGameSuccess = snapshot.child("gameStarted").getValue<Boolean>() ?: false
-                println(uiState.startGameSuccess)
                 for (player in playersValues?.values ?: emptyList()) {
                     if (player.host) hostExists = true
+                    if (player.id == UserRepository.getCurrentUserId()) uiState.defaultUserAlias = player.screenName
                     var idExists = false
                     for (currPlayer in uiState._players) {
-                        if (currPlayer.id == player.id)
+                        if (currPlayer.id == player.id){
                             idExists = true
+                        }
                     }
                     if (!idExists) uiState._players.add(player)
                 }
@@ -90,5 +94,19 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
             }
         }
         return false
+    }
+
+    fun changeAlias(joinCode: String) {
+        val userId = UserRepository.getCurrentUserId().toString()
+        LobbyRepo.db.getReference("lobbies").child(joinCode).child("players").child(UserRepository.getCurrentUserId()!!).child("screenName").setValue(uiState.userAlias)
+        var userIndex = 0
+        for (i in 0 until uiState.players.size) {
+            if (uiState._players[i].id == userId) {
+                userIndex = i
+            }
+        }
+        val player = uiState._players.removeAt(userIndex)
+        player.screenName = uiState.userAlias
+        uiState._players.add(player)
     }
 }
