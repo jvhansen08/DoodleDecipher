@@ -10,6 +10,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.jaredaaronlogan.myapplication.ui.components.Drawing
+import com.jaredaaronlogan.myapplication.ui.models.Game
 import com.jaredaaronlogan.myapplication.ui.models.Player
 import com.jaredaaronlogan.myapplication.ui.repositories.LobbyRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
@@ -54,9 +56,30 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
     fun startGame(joinCode: String) {
         LobbyRepo.db.getReference("lobbies").child(joinCode).child("gameStarted").setValue(true)
         uiState.errorMessage = ""
-//        uiState.gameOpen = false
-//        uiState.startGameSuccess = true
+        val drawingsMap = HashMap<String, Map<String, Drawing>>()
+        val promptsMap = HashMap<String, Map<String, String>>()
+        drawingsMap["0"] = HashMap()
+        promptsMap["0"] = HashMap()
+        val game = Game(
+            gameID = joinCode,
+            numPlayers = uiState._players.size,
+            playerMap = mapPlayers(),
+            maxRounds = uiState._players.size,
+            roundCounter = 0,
+            drawingsMap = drawingsMap,
+            promptsMap = promptsMap,
+        )
+        LobbyRepo.db.getReference("games").child(joinCode).setValue(game)
         print("Starting game...")
+    }
+
+    private fun mapPlayers(): Map<String, String> {
+        val map = HashMap<String, String>()
+        for (i in 0 until uiState._players.size) {
+            if (i < (uiState._players.size - 1)) map[uiState._players[i].id!!] = uiState._players[i + 1].id!!
+            else map[uiState._players[i].id!!] = uiState._players[0].id!!
+        }
+        return map
     }
 
     fun isHost(): Boolean {
