@@ -16,7 +16,7 @@ object GameStateRepo {
             .setValue(prompt)
     }
 
-    fun submitDrawing(gameId: String, drawing: Drawing, round: Int) {
+    fun submitDrawing(gameId: String, drawing: Drawing, round: Int, nextUserId: String) {
         db.getReference("games")
             .child(gameId)
             .child("drawingsMap")

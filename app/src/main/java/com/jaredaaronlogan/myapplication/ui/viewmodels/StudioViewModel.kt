@@ -30,6 +30,7 @@ class StudioScreenState {
     var drawingCount = 0
 
     var round = 0
+    var nextPlayerId = ""
 
     var penColor = black1.toInt()
     var width = 10f
@@ -68,6 +69,7 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
         gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
+                uiState.nextPlayerId = snapshot.child("playersMap").child(UserRepository.getCurrentUserId()!!).getValue<String>()!!
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
@@ -115,6 +117,7 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun submitDrawing(gameId: String) {
+
         val drawing = Drawing(
             xCollection = uiState.xCollection,
             yCollection = uiState.yCollection,
@@ -123,7 +126,7 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
             indexCounter = uiState.indexCounter,
             id = UserRepository.getCurrentUserId() + uiState.drawingCount
         )
-        GameStateRepo.submitDrawing(gameId, drawing, uiState.round)
+        GameStateRepo.submitDrawing(gameId, drawing, uiState.round, uiState.nextPlayerId)
     }
 
 }
