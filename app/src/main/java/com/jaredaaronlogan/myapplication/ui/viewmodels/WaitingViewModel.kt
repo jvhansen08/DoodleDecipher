@@ -26,7 +26,7 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
             override fun onDataChange(snapshot: DataSnapshot) {
                 val round = snapshot.child("roundCounter").getValue<Int>()!!
                 val playerCount = snapshot.child("numPlayers").getValue<Int>()!!
-                val readyPlayers: Long
+                var readyPlayers: Long
                 if (round % 2 == 0) {
                     readyPlayers = snapshot
                         .child("promptsMap")
@@ -38,7 +38,11 @@ class WaitingViewModel(application: Application): AndroidViewModel(application) 
                         .child(round.toString())
                         .childrenCount
                 }
-                if (readyPlayers.toInt() == playerCount ) uiState.waiting = false
+                if (readyPlayers.toInt() == playerCount ){
+                    uiState.waiting = false
+                    gameRef.child("roundCounter").setValue(round + 1)
+                    readyPlayers = 0
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {

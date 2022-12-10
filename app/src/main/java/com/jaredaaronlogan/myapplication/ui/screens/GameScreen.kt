@@ -7,13 +7,15 @@ import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.viewmodels.GameViewModel
 
 @Composable
-fun GameScreen(navController: NavController, gameCode: String) {
+fun GameScreen(navController: NavController, gameId: String) {
     val viewModel: GameViewModel = viewModel()
     val state = viewModel.uiState
+    viewModel.initialize(gameId)
+    println("Welcome to the game screen")
 
     if (state.round % 2 == 0){
-        navController.navigate(Routes.Gallery.route)
+        navController.navigate(Routes.Gallery.route + "?gameId=$gameId")
     } else {
-        navController.navigate(Routes.Studio.route)
+        navController.navigate(Routes.Studio.route + "?gameId=$gameId")
     }
 }

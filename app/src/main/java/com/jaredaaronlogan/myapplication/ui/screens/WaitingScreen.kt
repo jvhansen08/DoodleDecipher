@@ -10,10 +10,11 @@ import com.jaredaaronlogan.myapplication.ui.viewmodels.WaitingViewModel
 fun WaitingScreen(navController: NavController, gameId: String) {
     val viewModel: WaitingViewModel = viewModel()
     val state = viewModel.uiState
-
+    println("Welcome to the waiting screen")
     viewModel.initialize(gameId)
 
+
     if (!state.waiting) {
-        navController.navigate(Routes.Waiting.route)
+        navController.navigate(Routes.Game.route + "?gameId=$gameId")
     }
 }
