@@ -10,9 +10,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.jaredaaronlogan.myapplication.ui.repositories.GameStateRepo
+import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 
 class GameScreenState {
     var round by mutableStateOf(0)
+    var prompt by mutableStateOf("")
 }
 
 class GameViewModel(application: Application): AndroidViewModel(application) {
@@ -23,6 +25,12 @@ class GameViewModel(application: Application): AndroidViewModel(application) {
         gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
+                val targetPlayer = snapshot.child("playerMap").child(UserRepository.getCurrentUserId().toString())
+                if (uiState.round > 0 && uiState.round % 2 != 0) {
+                    uiState.prompt =
+                        snapshot.child("promptsMap").child((uiState.round - 1).toString()).child(targetPlayer.getValue<String>()!!).getValue<String>()
+                            .toString()
+                }
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
