@@ -56,14 +56,18 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
     fun startGame(joinCode: String) {
         LobbyRepo.db.getReference("lobbies").child(joinCode).child("gameStarted").setValue(true)
         uiState.errorMessage = ""
+        val drawingsMap = HashMap<String, Map<String, Drawing>>()
+        val promptsMap = HashMap<String, Map<String, String>>()
+        drawingsMap["0"] = HashMap()
+        promptsMap["0"] = HashMap()
         val game = Game(
             gameID = joinCode,
             numPlayers = uiState._players.size,
             playerMap = mapPlayers(),
             maxRounds = uiState._players.size,
             roundCounter = 0,
-            drawingsMap = HashMap(),
-            promptsMap = HashMap()
+            drawingsMap = drawingsMap,
+            promptsMap = promptsMap,
         )
         LobbyRepo.db.getReference("games").child(joinCode).setValue(game)
         print("Starting game...")
