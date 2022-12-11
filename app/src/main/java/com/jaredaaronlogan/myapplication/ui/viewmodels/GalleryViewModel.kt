@@ -9,12 +9,9 @@ import androidx.lifecycle.AndroidViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
 import com.jaredaaronlogan.myapplication.ui.repositories.GameStateRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
-import kotlin.math.round
 
 class GalleryScreenState {
     var colorCollectionIndex by mutableStateOf("0")
@@ -28,7 +25,7 @@ class GalleryScreenState {
 
     var guess by mutableStateOf("")
     var round = 0
-    var nextPlayerId = ""
+    var prevPlayerId = ""
 }
 
 
@@ -40,23 +37,23 @@ class GalleryViewModel(application: Application): AndroidViewModel(application) 
         gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
-                uiState.nextPlayerId = snapshot.child("playerMap").child(UserRepository.getCurrentUserId()!!).getValue<String>()!!
-                for (color in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("colorCollection").children) {
+                uiState.prevPlayerId = snapshot.child("playerMap").child(UserRepository.getCurrentUserId()!!).getValue<String>()!!
+                for (color in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.prevPlayerId).child("colorCollection").children) {
                     uiState.colorCollectionIndex = color.key.toString()
                     uiState._colorCollectionValue.add(color.getValue<Int>()!!)
                 }
-                uiState.indexCounter = snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("indexCounter").getValue<Int>() ?: 0
-                for (width in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("widthCollection").children) {
+                uiState.indexCounter = snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.prevPlayerId).child("indexCounter").getValue<Int>() ?: 0
+                for (width in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.prevPlayerId).child("widthCollection").children) {
                     uiState._widthCollectionValue.add(width.getValue<Float>()!!)
                 }
-                for (xValues in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("xcollection").children) {
+                for (xValues in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.prevPlayerId).child("xcollection").children) {
                     val tempArrayX = ArrayList<Float>()
                     for (xVal in xValues.children) {
                         tempArrayX.add(xVal.getValue<Float>() ?: 0f)
                     }
                     uiState.xCollectionValue.add(tempArrayX)
                 }
-                for (yValues in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.nextPlayerId).child("ycollection").children) {
+                for (yValues in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.prevPlayerId).child("ycollection").children) {
                     val tempArrayY = ArrayList<Float>()
                     for (yVal in yValues.children) {
                         tempArrayY.add(yVal.getValue<Float>() ?: 0f)

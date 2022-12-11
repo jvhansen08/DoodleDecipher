@@ -20,7 +20,6 @@ fun GameScreen(navController: NavController, gameId: String) {
     val viewModel: GameViewModel = viewModel()
     val state = viewModel.uiState
     viewModel.initialize(gameId)
-    println("Welcome to the game screen")
 
     if (state.round % 2 == 0){
         Column(
