@@ -50,7 +50,7 @@ fun PromptScreen(navController: NavController, gameId: String) {
                 .padding(15.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            TextField(value = state.prompt, onValueChange = { println(it);state.prompt = it })
+            TextField(value = state.prompt, onValueChange = { state.prompt = it })
 
         }
         Row(

@@ -89,7 +89,7 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(.7f)
+                        .height(50.dp)
                         .absolutePadding(right = 15.dp),
                     onClick = { viewModel.changeAlias(joinCode) }
                 ) {

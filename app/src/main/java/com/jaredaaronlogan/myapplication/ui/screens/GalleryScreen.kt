@@ -56,7 +56,7 @@ fun GalleryScreen(navController: NavController, gameId: String) {
             Button(
                 onClick = {
                     viewModel.submitGuess(gameId)
-                    navController.navigate(Routes.Game.route + "?gameId=$gameId")
+                    navController.navigate(Routes.Waiting.route + "?gameId=$gameId")
                 }) {
                 Text(text = "Submit")
             }
@@ -74,7 +74,6 @@ fun GalleryScreen(navController: NavController, gameId: String) {
             ) {
                 Canvas(modifier = Modifier.fillMaxSize()){
                     for (i in 0 until state.indexCounter) {
-                        println("I'm here!")
                         val path = Path()
                         val xVals = state.xCollectionValue[i]
                         val yVals = state.yCollectionValue[i]
@@ -88,7 +87,6 @@ fun GalleryScreen(navController: NavController, gameId: String) {
                             alpha = 1f,
                             style = Stroke(width = state._widthCollectionValue[i], cap = StrokeCap.Round, join = StrokeJoin.Round)
                         )
-                        println(state._colorCollectionValue[0])
                     }
                 }
             }

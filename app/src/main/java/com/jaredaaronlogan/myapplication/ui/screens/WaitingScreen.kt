@@ -18,7 +18,6 @@ import com.usu.firebasetodosapplication.ui.components.Loader
 fun WaitingScreen(navController: NavController, gameId: String) {
     val viewModel: WaitingViewModel = viewModel()
     val state = viewModel.uiState
-    println("Welcome to the waiting screen")
     viewModel.initialize(gameId)
     if (state.gameOver) {
         Column(

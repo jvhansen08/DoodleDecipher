@@ -23,9 +23,6 @@ object DrawingRepo {
                 val widthCollection = snapshot.child("widthCollection").value
                 val xCollection = snapshot.child("xCollection").value
                 val yCollection = snapshot.child("yCollection").value
-                println(indexCounter)
-
-
             }
 
             override fun onCancelled(error: DatabaseError) {
