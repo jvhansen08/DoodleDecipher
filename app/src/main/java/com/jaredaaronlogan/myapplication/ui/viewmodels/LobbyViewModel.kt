@@ -34,23 +34,26 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         val lobbyRef = LobbyRepo.db.getReference("lobbies").child(joinCode)
         lobbyRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                println("Data changed")
+                val readyIndexes = ArrayList<Int>()
                 val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
                 var hostExists = false
                 uiState.startGameSuccess = snapshot.child("gameStarted").getValue<Boolean>() ?: false
                 for (player in playersValues?.values ?: emptyList()) {
                     if (player.host) hostExists = true
                     if (player.id == UserRepository.getCurrentUserId()) uiState.defaultUserAlias = player.screenName
-                    var idExists = false
-                    for (currPlayer in uiState._players) {
-                        if (currPlayer.id == player.id){
-                            idExists = true
+                    var currPlayerIndex = -1
+                    for (i in 0 until uiState._players.size) {
+                        if (uiState._players[i].ready == true) readyIndexes.plus(i)
+                        if (uiState._players[i].id == player.id){
+                            currPlayerIndex = i
                         }
                     }
-                    if (!idExists) uiState._players.add(player)
+                    if (currPlayerIndex != -1) uiState._players.removeAt(currPlayerIndex)
+                    uiState._players.add(player)
                 }
                 if (!hostExists) uiState._players[0].host = true
             }
-
             override fun onCancelled(error: DatabaseError) {
                 println("Failed to read value.")
             }
@@ -96,17 +99,24 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         return false
     }
 
-    fun changeAlias(joinCode: String) {
-        val userId = UserRepository.getCurrentUserId().toString()
-        LobbyRepo.db.getReference("lobbies").child(joinCode).child("players").child(UserRepository.getCurrentUserId()!!).child("screenName").setValue(uiState.userAlias)
-        var userIndex = 0
-        for (i in 0 until uiState.players.size) {
-            if (uiState._players[i].id == userId) {
-                userIndex = i
+    fun isReady(): Boolean {
+        val uId = UserRepository.getCurrentUserId()
+        for(player in uiState._players) {
+            if (player.id == uId) {
+                return player.ready == true
             }
         }
-        val player = uiState._players.removeAt(userIndex)
-        player.screenName = uiState.userAlias
-        uiState._players.add(player)
+        return false
+    }
+
+    fun readyUp(joinCode: String) {
+        val userId = UserRepository.getCurrentUserId().toString()
+        LobbyRepo.db.getReference("lobbies").child(joinCode).child("players").child(userId).child("ready").setValue(true)
+    }
+
+    fun changeAlias(joinCode: String) {
+        val userId = UserRepository.getCurrentUserId().toString()
+        LobbyRepo.db.getReference("lobbies").child(joinCode).child("players").child(userId).child("screenName").setValue(uiState.userAlias)
+        println("updating...")
     }
 }
