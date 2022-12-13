@@ -116,12 +116,36 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
                     )
                 }
                 Column() {
-                    Button(onClick = {
-                        scope.launch {
-                            viewModel.startGame(joinCode)
+                    if (viewModel.isReady()) {
+                        Button(onClick = {
+                            scope.launch {
+                                viewModel.startGame(joinCode)
+                            }
+                        }) {
+                            Text(text = "Start Game")
                         }
+                    } else {
+                        Button(onClick = {
+                            viewModel.readyUp(joinCode)
+                        }) {
+                            Text(text = "Ready Up")
+                        }
+                    }
+                }
+            }
+        } else if (!viewModel.isReady()){
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(15.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column() {
+                    Button(onClick = {
+                        viewModel.readyUp(joinCode)
                     }) {
-                        Text(text = "Start Game")
+                        Text(text = "Ready Up")
                     }
                 }
             }

@@ -5,5 +5,5 @@ data class Player(
     var screenName: String = "",
     val score: Int? = 0,
     var host: Boolean = false,
-    val ready: Boolean? = false,
+    var ready: Boolean? = false,
 )
