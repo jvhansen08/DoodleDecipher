@@ -10,8 +10,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.firestore.auth.User
 import com.jaredaaronlogan.myapplication.ui.components.Drawing
 import com.jaredaaronlogan.myapplication.ui.repositories.GameStateRepo
+import com.jaredaaronlogan.myapplication.ui.repositories.LobbyRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 
 class EndState {
@@ -24,21 +26,30 @@ class EndState {
     var xCollectionValue = mutableStateListOf<ArrayList<Float>>()
     var yCollectionValue = mutableStateListOf<ArrayList<Float>>()
 
+    var playerMap = HashMap<String, String>()
+    val playerList = ArrayList<String>()
     var prevPlayerId = ""
     var prompt by mutableStateOf("")
-    var drawing = mutableStateOf( Drawing() )
 }
 
 class EndViewModel(application: Application): AndroidViewModel(application) {
     val uiState = EndState()
 
     fun initialize(gameId: String) {
+        val userId = UserRepository.getCurrentUserId()!!
+        var currPlayer = userId
+        do {
+            uiState.playerList.add(currPlayer)
+            currPlayer = uiState.playerMap[currPlayer]!!
+        } while (currPlayer != userId)
+
         val gameRef = GameStateRepo.db.getReference("games").child(gameId)
         gameRef.addListenerForSingleValueEvent( object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val maxRounds = snapshot.child("maxRounds").getValue<Int>()!!
                 val lastDrawingIndex = if (maxRounds % 2 == 1) maxRounds else maxRounds - 1
                 val userId = UserRepository.getCurrentUserId()!!
+                uiState.playerMap = snapshot.child("players").getValue<HashMap<String, String>>()!!
                 uiState.prompt = snapshot.child("promptsMap").child("0").child(userId).getValue<String>() ?: ""
 
                 uiState.prevPlayerId = snapshot.child("playerMap").child(UserRepository.getCurrentUserId()!!).getValue<String>()!!
@@ -68,7 +79,19 @@ class EndViewModel(application: Application): AndroidViewModel(application) {
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
-
         })
     }
+
+    fun findOrder(gameId: String) {
+        val userId = UserRepository.getCurrentUserId()!!
+        var currPlayer = userId
+        do {
+            uiState.playerList.add(currPlayer)
+            currPlayer = uiState.playerMap[currPlayer]!!
+        } while (currPlayer != userId)
+    }
+
+//    fun getNextDrawingAndSequence() {
+//
+//    }
 }
