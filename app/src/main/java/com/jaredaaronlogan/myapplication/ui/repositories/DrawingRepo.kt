@@ -11,7 +11,7 @@ object DrawingRepo {
     val db = Firebase.database
     fun saveImage(drawing: Drawing) {
         val drawingRef = db.getReference("drawings")
-        drawingRef.child(drawing.id).setValue(drawing)
+        drawingRef.child(drawing.id!!).setValue(drawing)
     }
 
     fun getImage(id: String) {
