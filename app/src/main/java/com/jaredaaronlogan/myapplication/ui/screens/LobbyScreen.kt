@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,6 +22,7 @@ import com.jaredaaronlogan.myapplication.ui.models.Game
 import com.jaredaaronlogan.myapplication.ui.navigation.Routes
 import com.jaredaaronlogan.myapplication.ui.viewmodels.LobbyViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @Composable
 fun LobbyScreen(navController: NavController, joinCode: String) {
@@ -58,10 +60,31 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
             Text(text = joinCode, style = MaterialTheme.typography.h3)
         }
         LazyColumn(modifier = Modifier
-            .fillMaxHeight(.7f)
+            .fillMaxHeight(.65f)
             .padding(16.dp)) {
             items(state.players, key = {it.id!!}) { player ->
                 PlayerListItem(player = player)
+            }
+        }
+        if (viewModel.isHost()) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(.15f)
+                .padding(5.dp)
+            ) {
+                Text(text = "Number of rounds: ${state.roundCount}")
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(.2f)
+                    .padding(5.dp)
+            ) {
+                Slider(
+                    value = state.roundCount.toFloat(),
+                    onValueChange = { state.roundCount = it.roundToInt() },
+                    valueRange = 2f .. 30f
+                )
             }
         }
         Row(

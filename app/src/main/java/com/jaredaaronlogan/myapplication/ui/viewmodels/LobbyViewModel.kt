@@ -25,6 +25,7 @@ class LobbyScreenState {
 
     var userAlias by mutableStateOf("")
     var defaultUserAlias by mutableStateOf("")
+    var roundCount by mutableStateOf(2)
 }
 
 class LobbyViewModel(application: Application): AndroidViewModel(application) {
@@ -34,7 +35,6 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
         val lobbyRef = LobbyRepo.db.getReference("lobbies").child(joinCode)
         lobbyRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                println("Data changed")
                 val readyIndexes = ArrayList<Int>()
                 val playersValues = snapshot.child("players").getValue<Map<String, Player>>()
                 var hostExists = false
@@ -71,7 +71,7 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
             gameID = joinCode,
             numPlayers = uiState._players.size,
             playerMap = mapPlayers(),
-            maxRounds = uiState._players.size,
+            maxRounds = uiState.roundCount - 1,
             roundCounter = 0,
             drawingsMap = drawingsMap,
             promptsMap = promptsMap,
@@ -117,6 +117,5 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
     fun changeAlias(joinCode: String) {
         val userId = UserRepository.getCurrentUserId().toString()
         LobbyRepo.db.getReference("lobbies").child(joinCode).child("players").child(userId).child("screenName").setValue(uiState.userAlias)
-        println("updating...")
     }
 }
