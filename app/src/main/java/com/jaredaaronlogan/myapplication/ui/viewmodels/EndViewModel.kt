@@ -26,7 +26,6 @@ class EndState {
 
     var prevPlayerId = ""
     var prompt by mutableStateOf("")
-    var drawing = mutableStateOf( Drawing() )
 }
 
 class EndViewModel(application: Application): AndroidViewModel(application) {
