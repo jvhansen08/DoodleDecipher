@@ -26,6 +26,7 @@ class GalleryScreenState {
     var guess by mutableStateOf("")
     var round = 0
     var prevPlayerId = ""
+    var sequenceId = ""
 }
 
 
@@ -38,6 +39,7 @@ class GalleryViewModel(application: Application): AndroidViewModel(application) 
             override fun onDataChange(snapshot: DataSnapshot) {
                 uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
                 uiState.prevPlayerId = snapshot.child("playerMap").child(UserRepository.getCurrentUserId()!!).getValue<String>()!!
+                uiState.sequenceId = snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.prevPlayerId).child("sequenceId").getValue<String>()!!
                 for (color in snapshot.child("drawingsMap").child((uiState.round - 1).toString()).child(uiState.prevPlayerId).child("colorCollection").children) {
                     uiState.colorCollectionIndex = color.key.toString()
                     uiState._colorCollectionValue.add(color.getValue<Int>()!!)
@@ -69,6 +71,6 @@ class GalleryViewModel(application: Application): AndroidViewModel(application) 
 
 
     fun submitGuess(gameId: String) {
-        GameStateRepo.submitPrompt(gameId, uiState.guess, uiState.round)
+        GameStateRepo.submitPrompt(gameId, uiState.guess, uiState.round, uiState.sequenceId)
     }
 }

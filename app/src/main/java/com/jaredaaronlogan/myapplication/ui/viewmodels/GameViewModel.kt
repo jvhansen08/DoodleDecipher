@@ -25,11 +25,10 @@ class GameViewModel(application: Application): AndroidViewModel(application) {
         gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
-                val targetPlayer = snapshot.child("playerMap").child(UserRepository.getCurrentUserId().toString())
+                val targetPlayer = snapshot.child("playerMap").child(UserRepository.getCurrentUserId().toString()).getValue<String>() ?: ""
                 if (uiState.round > 0 && uiState.round % 2 != 0) {
                     uiState.prompt =
-                        snapshot.child("promptsMap").child((uiState.round - 1).toString()).child(targetPlayer.getValue<String>()!!).getValue<String>()
-                            .toString()
+                        snapshot.child("promptsMap").child((uiState.round - 1).toString()).child(targetPlayer).child("prompt").getValue<String>() ?: ""
                 }
             }
             override fun onCancelled(error: DatabaseError) {

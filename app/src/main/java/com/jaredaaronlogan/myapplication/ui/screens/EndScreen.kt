@@ -35,50 +35,66 @@ fun EndScreen(navController: NavController, gameId: String) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(.1f)
-        ) {
-            Text(text = "You gave this prompt:")
-        }
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = state.prompt)
-        }
-        Row() {
-            Text(text = "And you ended up with this drawing:")
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
+        if (state.round != -1) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxSize(.8f)
-                    .background(Color.White)
+                    .fillMaxHeight(.1f)
             ) {
-                Canvas(modifier = Modifier.fillMaxSize()){
-                    for (i in 0 until state.indexCounter) {
-                        val path = Path()
-                        val xVals = state.xCollectionValue[i]
-                        val yVals = state.yCollectionValue[i]
-                        path.moveTo(xVals[0] / screenWidth, yVals[0] / screenHeight)
-                        for (j in 1 until xVals.size) {
-                            path.lineTo(xVals[j] / screenWidth, yVals[j] / screenHeight)
+                Text(text = "This prompt:")
+            }
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                viewModel.getPrompt(gameId)
+                Text(text = state.prompt)
+            }
+            Row() {
+                Text(text = "Was followed with this drawing:")
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxSize(.8f)
+                        .background(Color.White)
+                ) {
+                    viewModel.getDrawing(gameId)
+                    Canvas(modifier = Modifier.fillMaxSize()){
+                        for (i in 0 until state.indexCounter) {
+                            val path = Path()
+                            val xVals = state.xCollectionValue[i]
+                            val yVals = state.yCollectionValue[i]
+                            path.moveTo(xVals[0] / screenWidth, yVals[0] / screenHeight)
+                            for (j in 1 until xVals.size) {
+                                path.lineTo(xVals[j] / screenWidth, yVals[j] / screenHeight)
+                            }
+                            drawPath(
+                                path = path,
+                                color = Color(state._colorCollectionValue[i]),
+                                alpha = 1f,
+                                style = Stroke(width = state._widthCollectionValue[i], cap = StrokeCap.Round, join = StrokeJoin.Round)
+                            )
                         }
-                        drawPath(
-                            path = path,
-                            color = Color(state._colorCollectionValue[i]),
-                            alpha = 1f,
-                            style = Stroke(width = state._widthCollectionValue[i], cap = StrokeCap.Round, join = StrokeJoin.Round)
-                        )
                     }
                 }
             }
+            Column() {
+                if (state.round >= 2 || state.round == -1) {
+                    Button(onClick = { viewModel.moveBackSequence() }) {
+                        Text(text = "Back")
+                    }
+                }
+                Button(onClick = { viewModel.moveToNextSequence() }) {
+                    Text(text = "Next")
+                }
+            }
+        } else {
+            Text(text = "The end!")
         }
         Button(onClick = { navController.navigate(Routes.Home.route) }) {
             Text(text = "Home")

@@ -37,8 +37,8 @@ fun WaitingScreen(navController: NavController, gameId: String) {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(onClick = { navController.navigate(Routes.Home.route)}) {
-                    Text(text = "Home")
+                Button(onClick = { navController.navigate(Routes.End.route + "?gameId=$gameId")}) {
+                    Text(text = "View Results")
                 }
             }
         }
