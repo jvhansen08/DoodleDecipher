@@ -38,7 +38,7 @@ import com.jaredaaronlogan.myapplication.ui.viewmodels.StudioViewModel
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun StudioScreen(navController: NavController, gameId: String) {
-    val action: MutableState<Any?> = remember {  mutableStateOf(null) }
+    val action: MutableState<Any?> = remember { mutableStateOf(null) }
     var number by remember { mutableStateOf(0) }
     val viewModel: StudioViewModel = viewModel()
     val state = viewModel.uiState
@@ -54,10 +54,11 @@ fun StudioScreen(navController: NavController, gameId: String) {
             .fillMaxSize()
     ) {
         //Top bar
-        Row(modifier = Modifier
-            .fillMaxHeight(.1f)
-            .fillMaxWidth()
-            .background(color = Color(0xFFfCD5CE)),
+        Row(
+            modifier = Modifier
+                .fillMaxHeight(.1f)
+                .fillMaxWidth()
+                .background(color = Color(0xFFfCD5CE)),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
@@ -75,7 +76,7 @@ fun StudioScreen(navController: NavController, gameId: String) {
                             .padding(3.dp),
                         onClick = { navController.popBackStack() }
                     ) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Go Back",)
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Go Back")
                     }
                 }
             }
@@ -147,8 +148,7 @@ fun StudioScreen(navController: NavController, gameId: String) {
                                 state.xValuesPath = ArrayList()
                                 state.xValuesPath.add(it.x * screenWidth)
                                 state.widthCollection[state.indexCounter.toString()] = state.width
-                                state.colorCollection[state.indexCounter.toString()] =
-                                    state.penColor
+                                state.colorCollection[state.indexCounter.toString()] = state.penColor
                                 state.segment
                                     .path
                                     .moveTo(it.x, it.y)
@@ -177,7 +177,10 @@ fun StudioScreen(navController: NavController, gameId: String) {
                     val path = Path()
                     val xVals = state.xCollection[i.toString()]
                     val yVals = state.yCollection[i.toString()]
-                    path.moveTo((xVals?.get(0)  ?: 0f) / screenWidth , (yVals?.get(0) ?: 0f) / screenHeight)
+                    path.moveTo(
+                        (xVals?.get(0) ?: 0f) / screenWidth,
+                        (yVals?.get(0) ?: 0f) / screenHeight
+                    )
                     for (j in 1 until xVals!!.size) {
                         path.lineTo(xVals[j] / screenWidth, yVals!![j] / screenHeight)
                     }
@@ -185,24 +188,40 @@ fun StudioScreen(navController: NavController, gameId: String) {
                         path = path,
                         color = Color(state.colorCollection[i.toString()]!!),
                         alpha = 1f,
-                        style = Stroke(width = state.widthCollection[i.toString()]!!, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                        style = Stroke(
+                            width = state.widthCollection[i.toString()]!!,
+                            cap = StrokeCap.Round,
+                            join = StrokeJoin.Round
+                        )
                     )
                 }
                 action.value?.let {
                     if (state.xValuesPath.size > 0) {
                         val currPath = Path()
-                        currPath.moveTo(state.xValuesPath[0] / screenWidth, state.yValuesPath[0] / screenHeight)
+                        currPath.moveTo(
+                            state.xValuesPath[0] / screenWidth,
+                            state.yValuesPath[0] / screenHeight
+                        )
                         val size = state.xValuesPath.size
                         for (i in 1 until size) {
-                            currPath.lineTo(state.xValuesPath[i] / screenWidth, state.yValuesPath[i] / screenHeight)
+                            currPath.lineTo(
+                                state.xValuesPath[i] / screenWidth,
+                                state.yValuesPath[i] / screenHeight
+                            )
                         }
                         var colorNum = state.colorCollection[state.indexCounter.toString()]
-                        if (colorNum == null) colorNum = state.colorCollection[(state.indexCounter - 1).toString()]
+                        if (colorNum == null) colorNum =
+                            state.colorCollection[(state.indexCounter - 1).toString()]
                         drawPath(
                             path = currPath,
                             color = Color(colorNum!!),
                             alpha = 1f,
-                            style = Stroke(width = state.widthCollection[state.indexCounter.toString()] ?: state.widthCollection[(state.indexCounter - 1).toString()]!!, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                            style = Stroke(
+                                width = state.widthCollection[state.indexCounter.toString()]
+                                    ?: state.widthCollection[(state.indexCounter - 1).toString()]!!,
+                                cap = StrokeCap.Round,
+                                join = StrokeJoin.Round
+                            )
                         )
                     }
                 }
@@ -299,7 +318,10 @@ fun StudioScreen(navController: NavController, gameId: String) {
                         horizontalAlignment = Alignment.End
                     ) {
                         Button(onClick = { choosingColor = !choosingColor }) {
-                            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Collapse colors",)
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Collapse colors",
+                            )
                         }
                     }
                 }
@@ -325,19 +347,39 @@ fun StudioScreen(navController: NavController, gameId: String) {
                                 val configuration = LocalConfiguration.current
                                 val screenWidth = configuration.screenWidthDp
                                 Spacer(modifier = Modifier.width(5.dp))
-                                WidthOption(color = state.penColor, size = 20f, screenWidth.toFloat()) {
+                                WidthOption(
+                                    color = state.penColor,
+                                    size = 20f,
+                                    screenWidth.toFloat()
+                                ) {
                                     viewModel.changeWidth(15f)
                                 }
-                                WidthOption(color = state.penColor, size = 25f, screenWidth.toFloat()) {
+                                WidthOption(
+                                    color = state.penColor,
+                                    size = 25f,
+                                    screenWidth.toFloat()
+                                ) {
                                     viewModel.changeWidth(25f)
                                 }
-                                WidthOption(color = state.penColor, size = 30f, screenWidth.toFloat()) {
+                                WidthOption(
+                                    color = state.penColor,
+                                    size = 30f,
+                                    screenWidth.toFloat()
+                                ) {
                                     viewModel.changeWidth(40f)
                                 }
-                                WidthOption(color = state.penColor, size = 37f, screenWidth.toFloat()) {
+                                WidthOption(
+                                    color = state.penColor,
+                                    size = 37f,
+                                    screenWidth.toFloat()
+                                ) {
                                     viewModel.changeWidth(65f)
                                 }
-                                WidthOption(color = state.penColor, size = 45f, screenWidth.toFloat()) {
+                                WidthOption(
+                                    color = state.penColor,
+                                    size = 45f,
+                                    screenWidth.toFloat()
+                                ) {
                                     viewModel.changeWidth(100f)
                                 }
                             }
@@ -350,7 +392,10 @@ fun StudioScreen(navController: NavController, gameId: String) {
                             horizontalAlignment = Alignment.End
                         ) {
                             Button(onClick = { choosingWidth = !choosingWidth }) {
-                                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Collapse widths",)
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = "Collapse widths",
+                                )
                             }
                         }
                     }
@@ -368,7 +413,7 @@ fun ColorOptionRow(viewModel: StudioViewModel, colors: List<Int>, heightRatio: F
             .fillMaxWidth(1f)
     ) {
         var counter = 7f
-        var widthRatio = 1f/counter
+        var widthRatio = 1f / counter
         for (color in colors) {
             ColorOption(color = color, width = widthRatio) {
                 viewModel.changeColor(color)

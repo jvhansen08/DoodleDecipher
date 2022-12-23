@@ -111,6 +111,8 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
             val currSegment = HistoryEntry(lastX!!, lastY!!, lastWidth!!, lastColor!!)
             uiState.xCollection[(uiState.indexCounter - 1).toString()]!!.clear()
             uiState.yCollection[(uiState.indexCounter - 1).toString()]!!.clear()
+            uiState.colorCollection.remove((uiState.indexCounter - 1).toString())
+            uiState.widthCollection.remove((uiState.indexCounter - 1).toString())
             uiState.indexCounter--
             uiState.history.push(currSegment)
         }
