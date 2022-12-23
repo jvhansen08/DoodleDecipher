@@ -9,8 +9,10 @@ import androidx.lifecycle.AndroidViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
-import com.jaredaaronlogan.myapplication.ui.components.Drawing
+import com.google.firebase.ktx.Firebase
+import com.jaredaaronlogan.myapplication.ui.models.Drawing
 import com.jaredaaronlogan.myapplication.ui.models.Game
 import com.jaredaaronlogan.myapplication.ui.models.Player
 import com.jaredaaronlogan.myapplication.ui.repositories.LobbyRepo

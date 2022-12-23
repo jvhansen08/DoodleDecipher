@@ -8,9 +8,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.jaredaaronlogan.myapplication.ui.components.Drawing
+import com.jaredaaronlogan.myapplication.ui.models.Drawing
 import com.jaredaaronlogan.myapplication.ui.components.Segment
-import com.jaredaaronlogan.myapplication.ui.repositories.DrawingRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.GameStateRepo
 import com.jaredaaronlogan.myapplication.ui.repositories.UserRepository
 import com.jaredaaronlogan.myapplication.ui.theme.*
@@ -27,14 +26,13 @@ class StudioScreenState {
     val colorCollection = HashMap<String, Int>()
     val widthCollection = HashMap<String, Float>()
     var indexCounter = 0
-    var drawingCount = 0
 
     var round = 0
-    var nextPlayerId = ""
+    var sequenceId = ""
 
     var penColor = black1.toInt()
     var width = 10f
-    var segment = Segment(Path(), Color(penColor), width,)
+    var segment = Segment(Path(), Color(penColor), width)
     val topRowColors = listOf(
         black1.toInt(),
         pink1.toInt(),
@@ -69,6 +67,9 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
         gameRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 uiState.round = snapshot.child("roundCounter").getValue<Int>()!!
+                val targetPlayer = snapshot.child("playerMap").child(UserRepository.getCurrentUserId().toString()).getValue<String>()!!
+                uiState.sequenceId =
+                    snapshot.child("promptsMap").child((uiState.round - 1).toString()).child(targetPlayer).child("sequenceId").getValue<String>()!!
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
@@ -123,7 +124,7 @@ class StudioViewModel(application: Application): AndroidViewModel(application) {
             colorCollection = uiState.colorCollection,
             widthCollection = uiState.widthCollection,
             indexCounter = uiState.indexCounter,
-            id = UserRepository.getCurrentUserId() + uiState.drawingCount
+            sequenceId = uiState.sequenceId
         )
         GameStateRepo.submitDrawing(gameId, drawing, uiState.round)
     }

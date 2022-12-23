@@ -1,7 +1,5 @@
 package com.jaredaaronlogan.myapplication.ui.models
 
-import com.jaredaaronlogan.myapplication.ui.components.Drawing
-
 data class Game(
     val gameID: String? = "",
     val numPlayers: Int = 0,

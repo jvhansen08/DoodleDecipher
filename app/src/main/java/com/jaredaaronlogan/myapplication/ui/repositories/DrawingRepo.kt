@@ -5,13 +5,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.jaredaaronlogan.myapplication.ui.components.Drawing
+import com.jaredaaronlogan.myapplication.ui.models.Drawing
 
 object DrawingRepo {
     val db = Firebase.database
     fun saveImage(drawing: Drawing) {
         val drawingRef = db.getReference("drawings")
-        drawingRef.child(drawing.id!!).setValue(drawing)
+        drawingRef.child(drawing.sequenceId).setValue(drawing)
     }
 
     fun getImage(id: String) {

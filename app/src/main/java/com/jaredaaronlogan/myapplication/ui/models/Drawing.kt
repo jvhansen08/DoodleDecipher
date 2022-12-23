@@ -1,4 +1,4 @@
-package com.jaredaaronlogan.myapplication.ui.components
+package com.jaredaaronlogan.myapplication.ui.models
 
 class Drawing(
     val xCollection: HashMap<String, ArrayList<Float>>,
@@ -6,7 +6,7 @@ class Drawing(
     val colorCollection: HashMap<String, Int>,
     val widthCollection: HashMap<String, Float>,
     val indexCounter: Int,
-    val id: String
+    val sequenceId: String
 ) {
 
 }

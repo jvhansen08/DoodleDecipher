@@ -1,8 +1,6 @@
 package com.jaredaaronlogan.myapplication.ui.viewmodels
 
 import android.app.Application
-import androidx.compose.animation.core.snap
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,8 +9,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.jaredaaronlogan.myapplication.ui.components.Drawing
-import com.jaredaaronlogan.myapplication.ui.models.Game
 import com.jaredaaronlogan.myapplication.ui.repositories.GameStateRepo
 
 class WaitingScreenState {
