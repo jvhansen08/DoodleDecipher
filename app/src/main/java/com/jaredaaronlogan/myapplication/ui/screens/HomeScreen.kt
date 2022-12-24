@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -67,7 +68,7 @@ fun HomeScreen(navController: NavController) {
                 .padding(15.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            TextField(value = state.joinCode, onValueChange = { state.joinCode = it })
+            TextField(value = state.joinCode, onValueChange = { state.joinCode = it.uppercase() })
         }
         Row(
             modifier = Modifier

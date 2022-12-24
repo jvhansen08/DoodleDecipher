@@ -83,7 +83,7 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
                 Slider(
                     value = state.roundCount.toFloat(),
                     onValueChange = { state.roundCount = it.roundToInt() },
-                    valueRange = 2f .. 30f
+                    valueRange = state.players.size.toFloat() .. 30f
                 )
             }
         }
@@ -140,12 +140,20 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
                 }
                 Column() {
                     if (viewModel.isReady()) {
-                        Button(onClick = {
-                            scope.launch {
-                                viewModel.startGame(joinCode)
+                        if (viewModel.allPlayersAreReady()) {
+                            Button(onClick = {
+                                scope.launch {
+                                    viewModel.startGame(joinCode)
+                                }
+                            }) {
+                                Text(text = "Start Game")
                             }
-                        }) {
-                            Text(text = "Start Game")
+                        } else {
+                            Row(
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "Waiting for players to ready up")
+                            }
                         }
                     } else {
                         Button(onClick = {
@@ -156,19 +164,33 @@ fun LobbyScreen(navController: NavController, joinCode: String) {
                     }
                 }
             }
-        } else if (!viewModel.isReady()){
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(15.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Column() {
-                    Button(onClick = {
-                        viewModel.readyUp(joinCode)
-                    }) {
-                        Text(text = "Ready Up")
+        } else{
+            if (!viewModel.isReady()){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(15.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Column() {
+                        Button(onClick = {
+                            viewModel.readyUp(joinCode)
+                        }) {
+                            Text(text = "Ready Up")
+                        }
+                    }
+                }
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(15.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Column() {
+                        Text(text = "Waiting for host to start game...")
                     }
                 }
             }
