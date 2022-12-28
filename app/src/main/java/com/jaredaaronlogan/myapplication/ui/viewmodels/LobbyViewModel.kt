@@ -27,7 +27,7 @@ class LobbyScreenState {
 
     var userAlias by mutableStateOf("")
     var defaultUserAlias by mutableStateOf("")
-    var roundCount by mutableStateOf(2)
+    var roundCount by mutableStateOf(1)
 }
 
 class LobbyViewModel(application: Application): AndroidViewModel(application) {
@@ -55,6 +55,7 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
                     uiState._players.add(player)
                 }
                 if (!hostExists) uiState._players[0].host = true
+                if (uiState.roundCount < uiState._players.size) uiState.roundCount = uiState._players.size
             }
             override fun onCancelled(error: DatabaseError) {
                 println("Failed to read value.")
@@ -109,6 +110,13 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
             }
         }
         return false
+    }
+
+    fun allPlayersAreReady(): Boolean {
+        for (player in uiState._players) {
+            if (player.ready == false) return false
+        }
+        return true
     }
 
     fun readyUp(joinCode: String) {
