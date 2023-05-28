@@ -1,36 +1,27 @@
 {
   "project_info": {
-    "project_number": "337318052414",
-    "project_id": "doodledecipher",
-    "storage_bucket": "doodledecipher.appspot.com"
+    "project_number": "5093818467",
+    "firebase_url": "https://doodledecipher-2beef-default-rtdb.firebaseio.com",
+    "project_id": "doodledecipher-2beef",
+    "storage_bucket": "doodledecipher-2beef.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337318052414:android:5099804127ad713f65076f",
+        "mobilesdk_app_id": "1:5093818467:android:7eed9b225d8526fc147856",
         "android_client_info": {
           "package_name": "com.jaredaaronlogan.myapplication"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "337318052414-m7dk6a5g2ajppgpmfui22v9sbvaagn0v.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDNxGp-ykJyqWZtuAUQ-w1vzJWZlesPez8"
+          "current_key": "AIzaSyC4n9PH0kH5Ao9LHySuQ71FQvYm7VPCDDM"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337318052414-m7dk6a5g2ajppgpmfui22v9sbvaagn0v.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

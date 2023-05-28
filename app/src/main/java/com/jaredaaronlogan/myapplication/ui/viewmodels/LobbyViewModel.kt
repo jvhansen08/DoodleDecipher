@@ -120,6 +120,7 @@ class LobbyViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun readyUp(joinCode: String) {
+        println("Readying up")
         val userId = UserRepository.getCurrentUserId().toString()
         LobbyRepo.db.getReference("lobbies").child(joinCode).child("players").child(userId).child("ready").setValue(true)
     }
